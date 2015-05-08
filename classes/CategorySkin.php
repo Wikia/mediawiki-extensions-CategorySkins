@@ -16,7 +16,7 @@ class CategorySkin {
 	static private $mockData = [
 		[
 			'cs_id' => 1,
-			'cs_category' => 'Category:Elephants',
+			'cs_category' => 'Elephants',
 			'cs_prefix' => 'Elephant ',
 			'cs_suffix' => ' Page',
 			'cs_logo' => 'LogoElephant.png',
@@ -43,9 +43,8 @@ class CategorySkin {
 		global $wgResourceModules;
 		// TODO replace mock data with DB data
 		foreach (self::$mockData as $cs) {
-			$title = Title::newFromText($cs['cs_category']);
 			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs['cs_category'])] = [
-				'object' => new CategorySkinModule($title->getText())
+				'class' => 'CategorySkinModule'
 			];
 		}
 	}
@@ -67,11 +66,17 @@ class CategorySkin {
 		if (empty($categoryDepths)) {
 			return false;
 		}
+		// filter out the "Category:" prefix
+		foreach ($categoryDepths as $d => $categories) {
+			foreach ($categories as $i => $category) {
+				$categoryDepths[$d][$i] = substr($category, strpos($category, ':')+1);
+			}
+		}
 		// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
 		// $db = wfGetDB(DB_SLAVE);
 		// $res = $db->select(null, );
 		// TODO replace mock data with DB data
-		if (!empty($categoryDepths[0]) && $categoryDepths[0][0] == 'Category:Elephants') {
+		if (!empty($categoryDepths[0]) && $categoryDepths[0][0] == 'Elephants') {
 			$res = self::$mockData[0];
 		}
 		if ($res) {

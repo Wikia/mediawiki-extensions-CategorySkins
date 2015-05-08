@@ -13,11 +13,6 @@
 **/
 
 class CategorySkinModule extends ResourceLoaderWikiModule {
-	private $categoryName;
-	public function __construct($categoryName) {
-		$this->categoryName = $categoryName;
-	}
-
 	/* Protected Methods */
 
 	/**
@@ -28,8 +23,8 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	 * @return Array: List of pages
 	 */
 	protected function getPages( \ResourceLoaderContext $context ) {
-		return [
-			'MediaWiki:'.$this->categoryName.'.css' => [ 'type' => 'style' ]
+		return [ // drop first 23 characters (ext.categoryskins.skin.)
+			'MediaWiki:'.substr($this->name, 23).'.css' => [ 'type' => 'style' ]
 		];
 	}
 
