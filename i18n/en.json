@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": ["Noah Manneschmidt"]
+	},
+	"categoryskins": "Category Skins",
+	"categoryskin": "Category Skin",
+	"categoryskins_description": "Apply custom styles to pages according to category membership",
+	"action-skincategories": "assign styles to categories"
+}
