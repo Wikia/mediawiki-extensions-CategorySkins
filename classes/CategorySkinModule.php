@@ -13,6 +13,10 @@
 **/
 
 class CategorySkinModule extends ResourceLoaderWikiModule {
+	private $categoryName;
+	public function __construct($categoryName) {
+		$this->categoryName = $categoryName;
+	}
 
 	/* Protected Methods */
 
@@ -24,9 +28,9 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	 * @return Array: List of pages
 	 */
 	protected function getPages( \ResourceLoaderContext $context ) {
-		$pages = [];
-		$pages['MediaWiki:'.CategorySkin::$categoryTitle->getText().'.css'] = [ 'type' => 'style' ];
-		return $pages;
+		return [
+			'MediaWiki:'.$this->categoryName.'.css' => [ 'type' => 'style' ]
+		];
 	}
 
 	/* Methods */

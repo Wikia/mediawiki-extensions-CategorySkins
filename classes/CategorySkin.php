@@ -13,16 +13,48 @@
 **/
 
 class CategorySkin {
+	static private $mockData = [
+		[
+			'cs_id' => 1,
+			'cs_category' => 'Category:Elephants',
+			'cs_prefix' => 'Elephant ',
+			'cs_suffix' => ' Page',
+			'cs_logo' => 'LogoElephant.png',
+			'cs_style' => 1,
+		]
+	];
 
 	// core attributes of the skin
+	private $category;
 	private $prefix;
 	private $suffix;
 	private $logo;
+	private $hasStyle = false;
 
-	private function __construct($prefix = '', $suffix = '', $logo) {
-		$this->prefix = $prefix;
-		$this->suffix = $suffix;
-		$this->logo = $logo;
+	private function __construct($row) {
+		$this->category = $row['cs_category'];
+		$this->prefix = $row['cs_prefix'];
+		$this->suffix = $row['cs_suffix'];
+		$this->logo = $row['cs_logo'];
+		$this->hasStyle = $row['cs_style'];
+	}
+
+	public static function injectModules() {
+		global $wgResourceModules;
+		// TODO replace mock data with DB data
+		foreach (self::$mockData as $cs) {
+			$title = Title::newFromText($cs['cs_category']);
+			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs['cs_category'])] = [
+				'object' => new CategorySkinModule($title->getText())
+			];
+		}
+	}
+
+	/**
+	 * enforce module name constraints (no pipes, commas, or exclamation marks, and under 255 chars)
+	 */
+	public static function categoryToModuleName($name) {
+		return substr(str_replace(['|',',','!'], '', $name), 0, 200);
 	}
 
 	/**
@@ -38,10 +70,13 @@ class CategorySkin {
 		// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
 		// $db = wfGetDB(DB_SLAVE);
 		// $res = $db->select(null, );
+		// TODO replace mock data with DB data
 		if (!empty($categoryDepths[0]) && $categoryDepths[0][0] == 'Category:Elephants') {
-			return new CategorySkin('Elephant ', ' Page', 'LogoElephant.png');
+			$res = self::$mockData[0];
 		}
-		MWDebug::log('No category match');
+		if ($res) {
+			return new CategorySkin($res);
+		}
 		return false;
 	}
 
@@ -50,12 +85,19 @@ class CategorySkin {
 	 */
 	public function apply(&$title, $output) {
 		global $wgUploadPath, $wgLogo;
-		$hash = md5($this->logo);
-		$wgLogo = implode('/', [$wgUploadPath, substr($hash, 0, 1), substr($hash, 0, 2), $this->logo]);
+
+		// apply logo
+		if ($this->logo) {
+			$hash = md5($this->logo);
+			$wgLogo = implode('/', [$wgUploadPath, substr($hash, 0, 1), substr($hash, 0, 2), $this->logo]);
+		}
+
+		// apply title manipulation
 		$title->mPrefixedText = $this->prefix.$title->getPrefixedText().$this->suffix;
-		// self::$categoryTitle = $this->title;
-		// $output->addModules('ext.categoryskins.skin');
-		// :( probably have to rewrite to perform the css content lookup that ResourceLoaderWikiModule does right here and insert inline instead
-		// alternatively, modify the modules definition to be dynamic from the databaese right up front
+
+		// apply custom stylesheet
+		if ($this->hasStyle) {
+			$output->addModules('ext.categoryskins.skin.'.self::categoryToModuleName($this->category));
+		}
 	}
 }

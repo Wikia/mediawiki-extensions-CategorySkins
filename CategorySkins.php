@@ -55,9 +55,8 @@ $wgResourceModules['ext.categoryskins.special'] = [
 	'position' => 'top',
 ];
 
-$wgResourceModules['ext.categoryskins.skin'] = [
-	// 'class' => 'CategorySkinModule'
-];
-
 // Hooks (uncomment if applicable)
 $wgHooks['BeforeInitialize'][] = 'CategorySkinsHooks::onBeforeInitialize';
+
+// Setup functions
+$wgExtensionFunctions[] = 'CategorySkin::injectModules';
