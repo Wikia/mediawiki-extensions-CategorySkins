@@ -31,7 +31,6 @@ $wgAvailableRights[] = 'skincategories';
 /******************************************/
 $wgMessagesDirs['CategorySkins'] = __DIR__.'/i18n';
 $wgExtensionMessagesFiles['CategorySkins']      = __DIR__."/CategorySkins.i18n.php";
-// $wgExtensionMessagesFiles['CategorySkinsMagic'] = __DIR__."/CategorySkins.i18n.magic.php";
 
 // Classes
 
@@ -51,12 +50,13 @@ $wgResourceModules['ext.categoryskins.special'] = [
 	'scripts' => ['js/categoryskins.special.js'],
 	'localBasePath' => __DIR__.'/',
 	'remoteExtPath' => 'CategorySkins',
-	'dependencies' => [],
+	'dependencies' => ['ext.curse.font-awesome'],
 	'position' => 'top',
 ];
 
 // Hooks (uncomment if applicable)
-$wgHooks['BeforeInitialize'][] = 'CategorySkinsHooks::onBeforeInitialize';
+$wgHooks['BeforeInitialize'][]           = 'CategorySkinsHooks::onBeforeInitialize';
+$wgHooks['LoadExtensionSchemaUpdates'][] = 'CategorySkinsHooks::onLoadExtensionSchemaUpdates';
 
 // Setup functions
 $wgExtensionFunctions[] = 'CategorySkin::injectModules';

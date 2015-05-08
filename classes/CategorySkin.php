@@ -13,17 +13,6 @@
 **/
 
 class CategorySkin {
-	static private $mockData = [
-		[
-			'cs_id' => 1,
-			'cs_category' => 'Elephants',
-			'cs_prefix' => 'Elephant ',
-			'cs_suffix' => ' Page',
-			'cs_logo' => 'LogoElephant.png',
-			'cs_style' => 1,
-		]
-	];
-
 	// core attributes of the skin
 	private $category;
 	private $prefix;
@@ -41,9 +30,15 @@ class CategorySkin {
 
 	public static function injectModules() {
 		global $wgResourceModules;
-		// TODO replace mock data with DB data
-		foreach (self::$mockData as $cs) {
-			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs['cs_category'])] = [
+		$db = wfGetDB(DB_SLAVE);
+		$res = $db->select(
+			['category_skins'],
+			['cs_category'],
+			[],
+			__METHOD__
+		);
+		foreach ($res as $cs) {
+			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
 				'class' => 'CategorySkinModule'
 			];
 		}
@@ -63,24 +58,23 @@ class CategorySkin {
 	 */
 	public static function newFromTitle(Title $title) {
 		$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
-		if (empty($categoryDepths)) {
-			return false;
-		}
-		// filter out the "Category:" prefix
+		// filter out the "Category:" prefix and flatten
+		$db = wfGetDB(DB_SLAVE);
+		$cats = [];
 		foreach ($categoryDepths as $d => $categories) {
 			foreach ($categories as $i => $category) {
-				$categoryDepths[$d][$i] = substr($category, strpos($category, ':')+1);
+				$cats[] = "'".$db->strencode(substr($category, strpos($category, ':')+1))."'";
 			}
 		}
-		// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
-		// $db = wfGetDB(DB_SLAVE);
-		// $res = $db->select(null, );
-		// TODO replace mock data with DB data
-		if (!empty($categoryDepths[0]) && $categoryDepths[0][0] == 'Elephants') {
-			$res = self::$mockData[0];
+		if (empty($cats)) {
+			return false;
 		}
+
+		$cats = implode(',', $cats);
+		// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
+		$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
 		if ($res) {
-			return new CategorySkin($res);
+			return new CategorySkin((array)$res);
 		}
 		return false;
 	}

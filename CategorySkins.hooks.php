@@ -20,4 +20,16 @@ class CategorySkinsHooks {
 		}
 		return true;
 	}
+
+	/**
+	 * Setups and Modifies Database Information
+	 *
+	 * @access	public
+	 * @param	object	DatabaseUpdater Object
+	 * @return	boolean	true
+	 */
+	static public function onLoadExtensionSchemaUpdates($updater) {
+		$extDir = __DIR__;
+		$updater->addExtensionUpdate(array('addTable', 'category_skins', "{$extDir}/install/sql/create_table_category_skins.sql", true));
+	}
 }
