@@ -66,15 +66,18 @@ class CategorySkin {
 				$cats[] = "'".$db->strencode(substr($category, strpos($category, ':')+1))."'";
 			}
 		}
-		if (empty($cats)) {
-			return false;
+		if (!empty($cats)) {
+			$cats = implode(',', $cats);
+			// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
+			$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
+			if ($res) {
+				return new CategorySkin((array)$res);
+			}
 		}
 
-		$cats = implode(',', $cats);
-		// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
-		$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
-		if ($res) {
-			return new CategorySkin((array)$res);
+		// if we don't have a skin yet, check categories on subject page (if this is a talk page)
+		if ($title->isTalkPage()) {
+			return self::newFromTitle($title->getSubjectPage());
 		}
 		return false;
 	}
