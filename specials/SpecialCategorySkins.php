@@ -27,7 +27,7 @@ class SpecialCategorySkins extends SpecialPage {
 
 	static $form = [
 		'cs_id' => [
-			'type' => 'hidden',
+			'class' => 'HTMLDynamicHiddenField',
 			'default' => 0
 		],
 		'cs_category' => [
@@ -60,9 +60,14 @@ class SpecialCategorySkins extends SpecialPage {
 		$this->checkPermissions();
 		$this->outputHeader();
 		$this->getOutput()->addModules('ext.categoryskins.special');
+		$db = wfGetDB(DB_SLAVE);
 
-		if ($path == 'edit') {
+		if ($path) {
 			$this->getOutput()->addHtml('<p>'.Html::element('a', ['href'=>$this->getTitle()->getLinkUrl()], 'back to skin list'));
+		}
+
+		switch ($path) {
+		case 'edit':
 			if ($this->getRequest()->getVal('id') && !$this->loadSkinForEdit()) {
 				$this->getOutput()->addHtml('<p>Could not load skin for ID: '.$this->getRequest()->getVal('id'));
 				return;
@@ -78,9 +83,28 @@ class SpecialCategorySkins extends SpecialPage {
 				// submission successful!
 				$this->getOutput()->redirect($this->getTitle()->getLinkUrl());
 			}
-		} else {
+			break;
+
+		case 'delete':
+			if (!$this->getRequest()->getVal('id')) {
+				$this->getOutput()->addHtml('<p>No id specified</p>');
+
+			}
+			if ($this->getRequest()->wasPosted()) {
+				if ( $db->delete('category_skins', ['cs_id' => $this->getRequest()->getVal('id')]) ) {
+					$this->getOutput()->redirect($this->getTitle()->getLinkUrl());
+				} else {
+					$this->getOutput()->addHtml('<p>Error while deleting skin</p>');
+				}
+			} else {
+				$name = $db->selectField('category_skins', ['cs_category'], ['cs_id' => $this->getRequest()->getVal('id')]);
+				$this->getOutput()->addHtml("<p>Confirm deletion of style for Category:$name</p>");
+				$this->getOutput()->addHtml('<form method="post"><button>Delete</button></form>');
+			}
+			break;
+
+		default:
 			// display list
-			$db = wfGetDB(DB_SLAVE);
 			$res = $db->select(
 				['category_skins'],
 				['*'],
@@ -95,9 +119,10 @@ class SpecialCategorySkins extends SpecialPage {
 
 	public function saveStyle($data) {
 		$db = wfGetDB(DB_MASTER);
-		if ($data['id']) {
-			$res = $db->update('category_skins', $data, [ 'cs_id' => $data['id'] ], __METHOD__);
+		if ($data['cs_id']) {
+			$res = $db->update('category_skins', $data, [ 'cs_id' => $data['cs_id'] ], __METHOD__);
 		} else {
+			unset($data['cs_id']);
 			$res = $db->insert('category_skins', $data, __METHOD__);
 		}
 
@@ -122,21 +147,31 @@ class SpecialCategorySkins extends SpecialPage {
 	}
 
 	private function styleTable($styles) {
+		if (!$styles->current()) {
+			return '<p>No styles exist</p>';
+		}
 		$html = '<table class="wikitable"><thead><tr>';
 		$html .= '<th>Category Name</td>';
 		$html .= '<th>Title Prefix</td>';
 		$html .= '<th>Title Suffix</td>';
 		$html .= '<th>Logo</td>';
 		$html .= '<th>Stylesheet?</td>';
+		$html .= '<th>Edit</td>';
+		$html .= '<th>Del</td>';
 		$html .= '</th></thead><tbody>';
 		foreach($styles as $style) {
 			$html .= '<tr>';
 			$html .= '<td>'.Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], $style->cs_category);
 			$html .= Html::element('td', [], var_export($style->cs_prefix, true));
 			$html .= Html::element('td', [], var_export($style->cs_suffix, true));
-			$html .= '<td>'.Html::element('a', ['href'=>Title::newFromText('File:'.$style->cs_logo)->getLinkUrl()], $style->cs_logo);
+			if ($logo = Title::newFromText('File:'.$style->cs_logo)) {
+				$html .= '<td>'.Html::element('a', ['href'=>$logo->getLinkUrl()], $style->cs_logo);
+			} else {
+				$html .= '<td>'.htmlspecialchars($style->cs_logo);
+			}
 			$html .= Html::element('td', [], $style->cs_style ? 'Y' : 'N');
 			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('pencil'));
+			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('trash'));
 		}
 		$html .= '</tbody></table>';
 		return $html;
