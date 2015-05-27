@@ -146,20 +146,32 @@ class SpecialCategorySkins extends SpecialPage {
 		return false;
 	}
 
+	/**
+	 * Generate a style table for database results.
+	 *
+	 * @access	private
+	 * @param	mixed	Database Result object or false for no results.
+	 * @return	void
+	 */
 	private function styleTable($styles) {
-		if (!$styles->current()) {
-			return '<p>No styles exist</p>';
+		if (empty($styles) || !$styles->current()) {
+			return '<p>'.wfMessage('cs_no_styles_exist')->escaped().'</p>';
 		}
-		$html = '<table class="wikitable"><thead><tr>';
-		$html .= '<th>Category Name</td>';
-		$html .= '<th>Title Prefix</td>';
-		$html .= '<th>Title Suffix</td>';
-		$html .= '<th>Logo</td>';
-		$html .= '<th>Stylesheet?</td>';
-		$html .= '<th>Edit</td>';
-		$html .= '<th>Del</td>';
-		$html .= '</th></thead><tbody>';
-		foreach($styles as $style) {
+		$html = '
+			<table class="wikitable">
+				<thead>
+					<tr>
+						<th>'.wfMessage('cs_category_name')->escaped().'</td>
+						<th>'.wfMessage('cs_title_prefix')->escaped().'</td>
+						<th>'.wfMessage('cs_title_suffix')->escaped().'</td>
+						<th>'.wfMessage('cs_logo')->escaped().'</td>
+						<th>'.wfMessage('cs_stylesheet?')->escaped().'</td>
+						<th>'.wfMessage('cs_edit')->escaped().'</td>
+						<th>'.wfMessage('cs_delete')->escaped().'</td>
+					</th>
+				</thead>
+				<tbody>';
+		foreach ($styles as $style) {
 			$html .= '<tr>';
 			$html .= '<td>'.Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], $style->cs_category);
 			$html .= Html::element('td', [], var_export($style->cs_prefix, true));
@@ -173,7 +185,10 @@ class SpecialCategorySkins extends SpecialPage {
 			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('pencil'));
 			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('trash'));
 		}
-		$html .= '</tbody></table>';
+		$html .= '
+				</tbody>
+			</table>';
+
 		return $html;
 	}
 }

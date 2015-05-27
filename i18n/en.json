@@ -5,5 +5,13 @@
 	"categoryskins": "Category Skins",
 	"categoryskin": "Category Skin",
 	"categoryskins_description": "Apply custom styles to pages according to category membership",
-	"action-skincategories": "assign styles to categories"
+	"action-skincategories": "assign styles to categories",
+	"cs_category_name": "Category Name",
+	"cs_title_prefix": "Title Prefix",
+	"cs_title_suffix": "Title Suffix",
+	"cs_logo": "Logo",
+	"cs_stylesheet?": "Stylesheet?",
+	"cs_edit": "Edit",
+	"cs_delete": "Delete",
+	"cs_no_styles_exist": "No styles exist."
 }
