@@ -13,13 +13,41 @@
 **/
 
 class CategorySkin {
-	// core attributes of the skin
+	/**
+	 * Category name
+	 * @var	string
+	 */
 	private $category;
+
+	/**
+	 * Title prefix
+	 * @var	string
+	 */
 	private $prefix;
+
+	/**
+	 * Title suffix
+	 * @var	string
+	 */
 	private $suffix;
+
+	/**
+	 * Logo title
+	 * @var	string
+	 */
 	private $logo;
+
+	/**
+	 * Has a stylesheet flag
+	 * @var bool
+	 */
 	private $hasStyle = false;
 
+	/**
+	 * Main constructor
+	 *
+	 * @param array	$row	Core skin attributes
+	 */
 	private function __construct($row) {
 		$this->category = $row['cs_category'];
 		$this->prefix = $row['cs_prefix'];
@@ -28,6 +56,11 @@ class CategorySkin {
 		$this->hasStyle = $row['cs_style'];
 	}
 
+	/**
+	 * Injects styles into the Resource Loader
+	 *
+	 * @return	void
+	 */
 	public static function injectModules() {
 		global $wgResourceModules;
 		$db = wfGetDB(DB_SLAVE);
@@ -46,7 +79,10 @@ class CategorySkin {
 	}
 
 	/**
-	 * enforce module name constraints (no pipes, commas, or exclamation marks, and under 255 chars)
+	 * Enforce module name constraints (No pipes, commas, or exclamation marks, and under 255 chars)
+	 *
+	 * @param string $name	Module name
+	 * @return string	Cleaned up module name
 	 */
 	public static function categoryToModuleName($name) {
 		return substr(str_replace(['|',',','!'], '', $name), 0, 200);
@@ -54,6 +90,7 @@ class CategorySkin {
 
 	/**
 	 * Recursive lookup through nested categories to find one for which we have a style
+	 *
 	 * @param  Title
 	 * @return CategorySkin or false
 	 */
@@ -83,10 +120,15 @@ class CategorySkin {
 		return false;
 	}
 
+
 	/**
-	 * Apply this skin to the given
+	 * Apply a skin to page's given category
+	 *
+	 * @param Title $title
+	 * @param OutputPage $output
+	 * @return void
 	 */
-	public function apply(&$title, $output) {
+	public function apply(Title &$title, OutputPage $output) {
 		global $wgUploadPath, $wgLogo;
 
 		// apply logo
