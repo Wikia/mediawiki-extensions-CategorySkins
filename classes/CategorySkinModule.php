@@ -13,13 +13,10 @@
 **/
 
 class CategorySkinModule extends ResourceLoaderWikiModule {
-	/* Protected Methods */
-
 	/**
 	 * Gets list of pages used by this module
 	 *
 	 * @param $context ResourceLoaderContext
-	 *
 	 * @return Array: List of pages
 	 */
 	protected function getPages( \ResourceLoaderContext $context ) {
@@ -28,17 +25,18 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 		];
 	}
 
-	/* Methods */
-
 	/**
 	 * Gets group name
-	 *
-	 * @return String: Name of group
+	 * @return	string	Name of group
 	 */
 	public function getGroup() {
 		return 'site';
 	}
 
+	/**
+	 * Get position
+	 * @return string	Position for the css
+	 */
 	public function getPosition() {
 		return 'top';
 	}
