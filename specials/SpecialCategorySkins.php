@@ -151,7 +151,7 @@ class SpecialCategorySkins extends SpecialPage {
 	 *
 	 * @access	private
 	 * @param	mixed	Database Result object or false for no results.
-	 * @return	mixed
+	 * @return	string
 	 */
 	private function styleTable($styles) {
 		if (empty($styles) || !$styles->current()) {
