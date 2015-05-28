@@ -13,6 +13,13 @@
 **/
 
 class CategorySkinsHooks {
+	/**
+	 * Check to see if a skin needs to be applied to the page.
+	 *
+	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/BeforeInitialize
+	 * @access	public
+	 * @return	bool	true
+	 */
 	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
 		$skin = CategorySkin::newFromTitle($title);
 		if ($skin) {
@@ -24,12 +31,14 @@ class CategorySkinsHooks {
 	/**
 	 * Setups and Modifies Database Information
 	 *
+	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
 	 * @access	public
-	 * @param	object	DatabaseUpdater Object
 	 * @return	boolean	true
 	 */
-	static public function onLoadExtensionSchemaUpdates($updater) {
+	static public function onLoadExtensionSchemaUpdates(DatabaseUpdater $updater) {
 		$extDir = __DIR__;
 		$updater->addExtensionUpdate(array('addTable', 'category_skins', "{$extDir}/install/sql/create_table_category_skins.sql", true));
+
+		return true;
 	}
 }
