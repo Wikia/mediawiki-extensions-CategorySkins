@@ -98,7 +98,7 @@ class SpecialCategorySkins extends SpecialPage {
 				}
 			} else {
 				$name = $db->selectField('category_skins', ['cs_category'], ['cs_id' => $this->getRequest()->getVal('id')]);
-				$this->getOutput()->addHtml("<p>Confirm deletion of style for Category:$name</p>");
+				$this->getOutput()->addHtml("<p>Confirm deletion of skin for Category:$name</p>");
 				$this->getOutput()->addHtml('<form method="post"><button>Delete</button></form>');
 			}
 			break;
@@ -112,7 +112,7 @@ class SpecialCategorySkins extends SpecialPage {
 				__METHOD__,
 				[ 'cs_category' => 'DESC' ]
 			);
-			$this->getOutput()->addHtml(Html::element('a', ['href'=>$this->getTitle('edit')->getLinkUrl()], 'New Category Style'));
+			$this->getOutput()->addHtml(Html::element('a', ['href'=>$this->getTitle('edit')->getLinkUrl()], 'New Category Skin'));
 			$this->getOutput()->addHtml($this->styleTable($res));
 		}
 	}
@@ -130,7 +130,7 @@ class SpecialCategorySkins extends SpecialPage {
 			return true;
 		}
 
-		return 'Failed to save category style';
+		return 'Failed to save category skin';
 	}
 
 	private function loadSkinForEdit() {
