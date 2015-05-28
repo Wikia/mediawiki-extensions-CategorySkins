@@ -151,7 +151,7 @@ class SpecialCategorySkins extends SpecialPage {
 	 *
 	 * @access	private
 	 * @param	mixed	Database Result object or false for no results.
-	 * @return	void
+	 * @return	mixed
 	 */
 	private function styleTable($styles) {
 		if (empty($styles) || !$styles->current()) {
@@ -165,7 +165,7 @@ class SpecialCategorySkins extends SpecialPage {
 						<th>'.wfMessage('cs_title_prefix')->escaped().'</td>
 						<th>'.wfMessage('cs_title_suffix')->escaped().'</td>
 						<th>'.wfMessage('cs_logo')->escaped().'</td>
-						<th>'.wfMessage('cs_stylesheet?')->escaped().'</td>
+						<th>'.wfMessage('cs_stylesheet')->escaped().'</td>
 						<th>'.wfMessage('cs_edit')->escaped().'</td>
 						<th>'.wfMessage('cs_delete')->escaped().'</td>
 					</th>
@@ -173,17 +173,27 @@ class SpecialCategorySkins extends SpecialPage {
 				<tbody>';
 		foreach ($styles as $style) {
 			$html .= '<tr>';
-			$html .= '<td>'.Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], $style->cs_category);
+			$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], $style->cs_category));
 			$html .= Html::element('td', [], var_export($style->cs_prefix, true));
 			$html .= Html::element('td', [], var_export($style->cs_suffix, true));
+
+			// Logo
 			if ($logo = Title::newFromText('File:'.$style->cs_logo)) {
-				$html .= '<td>'.Html::element('a', ['href'=>$logo->getLinkUrl()], $style->cs_logo);
+				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>$logo->getLinkUrl()], $style->cs_logo));
 			} else {
-				$html .= '<td>'.htmlspecialchars($style->cs_logo);
+				$html .= Html::element('td', [], htmlspecialchars($style->cs_logo));
 			}
-			$html .= Html::element('td', [], $style->cs_style ? 'Y' : 'N');
-			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('pencil'));
-			$html .= '<td>'.Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('trash'));
+
+			// Stylesheet Link
+			if ($style->cs_style) {
+				$stylesheetPath = 'Mediawiki:'.$style->cs_category.'.css';
+				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText($stylesheetPath)->getLinkURL()], $stylesheetPath));
+			} else {
+				$html .= Html::element('td', ['class' => 'table-center'], 'N/A');
+			}
+
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('pencil')));
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('trash')));
 		}
 		$html .= '
 				</tbody>

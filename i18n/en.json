@@ -10,7 +10,7 @@
 	"cs_title_prefix": "Title Prefix",
 	"cs_title_suffix": "Title Suffix",
 	"cs_logo": "Logo",
-	"cs_stylesheet?": "Stylesheet?",
+	"cs_stylesheet": "Stylesheet",
 	"cs_edit": "Edit",
 	"cs_delete": "Delete",
 	"cs_no_styles_exist": "No skins exist."
