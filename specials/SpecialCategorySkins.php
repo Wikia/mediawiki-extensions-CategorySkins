@@ -13,6 +13,9 @@
 **/
 
 class SpecialCategorySkins extends SpecialPage {
+	/**
+	 * Main constructor
+	 */
 	public function __construct() {
 		parent::__construct(
 			'CategorySkins', // name
@@ -21,10 +24,18 @@ class SpecialCategorySkins extends SpecialPage {
 		);
 	}
 
+	/**
+	 * Get group name
+	 * @return string
+	 */
 	public function getGroupName() {
 		return 'pages';
 	}
 
+	/**
+	 * Form fields
+	 * @var array
+	 */
 	static $form = [
 		'cs_id' => [
 			'class' => 'HTMLDynamicHiddenField',
@@ -55,7 +66,13 @@ class SpecialCategorySkins extends SpecialPage {
 		],
 	];
 
-	public function execute( $path ) {
+	/**
+	 * Main executor
+	 *
+	 * @param null|string $path
+	 * @throws DBUnexpectedError
+	 */
+	public function execute( $path = null ) {
 		$this->setHeaders();
 		$this->checkPermissions();
 		$this->outputHeader();
@@ -69,7 +86,7 @@ class SpecialCategorySkins extends SpecialPage {
 		switch ($path) {
 		case 'edit':
 			if ($this->getRequest()->getVal('id') && !$this->loadSkinForEdit()) {
-				$this->getOutput()->addHtml('<p>Could not load skin for ID: '.$this->getRequest()->getVal('id'));
+				$this->getOutput()->addHtml('<p>'.wfMessage("cs_error_load_skin_for_id", $this->getRequest()->getVal('id'))->text());
 				return;
 			}
 			// hard-code the field names to remove the 'wp' prefix (ugh!)
@@ -87,19 +104,19 @@ class SpecialCategorySkins extends SpecialPage {
 
 		case 'delete':
 			if (!$this->getRequest()->getVal('id')) {
-				$this->getOutput()->addHtml('<p>No id specified</p>');
+				$this->getOutput()->addHtml('<p>'.wfMessage("cs_error_no_id")->text().'</p>');
 
 			}
 			if ($this->getRequest()->wasPosted()) {
 				if ( $db->delete('category_skins', ['cs_id' => $this->getRequest()->getVal('id')]) ) {
 					$this->getOutput()->redirect($this->getTitle()->getLinkUrl());
 				} else {
-					$this->getOutput()->addHtml('<p>Error while deleting skin</p>');
+					$this->getOutput()->addHtml('<p>'.wfMessage("cs_error_deleting_skin")->text().'</p>');
 				}
 			} else {
 				$name = $db->selectField('category_skins', ['cs_category'], ['cs_id' => $this->getRequest()->getVal('id')]);
-				$this->getOutput()->addHtml("<p>Confirm deletion of skin for Category:$name</p>");
-				$this->getOutput()->addHtml('<form method="post"><button>Delete</button></form>');
+				$this->getOutput()->addHtml("<p>".wfMessage("cs_confirm_skin_delete", $name)->text()."</p>");
+				$this->getOutput()->addHtml('<form method="post"><button>'.wfMessage("cs_delete")->text().'</button></form>');
 			}
 			break;
 
@@ -117,6 +134,12 @@ class SpecialCategorySkins extends SpecialPage {
 		}
 	}
 
+	/**
+	 * Save skin details
+	 *
+	 * @param $data
+	 * @return bool|string
+	 */
 	public function saveStyle($data) {
 		$db = wfGetDB(DB_MASTER);
 		if ($data['cs_id']) {
@@ -133,6 +156,11 @@ class SpecialCategorySkins extends SpecialPage {
 		return 'Failed to save category skin';
 	}
 
+	/**
+	 * Request skin data and load it
+	 * 
+	 * @return bool
+	 */
 	private function loadSkinForEdit() {
 		$id = $this->getRequest()->getVal('id');
 		$db = wfGetDB(DB_SLAVE);
