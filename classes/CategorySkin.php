@@ -144,6 +144,12 @@ class CategorySkin {
 		}
 	}
 
+	/**
+	 * Apply a custom title from a given category
+	 *
+	 * @param $template
+	 * @return bool | void
+	 */
 	public function applyTitleChange($template){
 		if (!isset($template->data) || !isset($template->data['headelement'])) {
 			return true;
@@ -153,6 +159,5 @@ class CategorySkin {
 			'headelement',
 			str_replace('<title>'.htmlspecialchars($template->data['pagetitle']).'</title>', '<title>'.htmlspecialchars($this->prefix.$template->data['title'].$this->suffix).'</title>', $template->data['headelement'])
 		);
-
 	}
 }
