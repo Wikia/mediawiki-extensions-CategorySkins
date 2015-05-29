@@ -115,6 +115,7 @@ class CategorySkin {
 
 		// if we don't have a skin yet, check categories on subject page (if this is a talk page)
 		if ($title->isTalkPage()) {
+
 			return self::newFromTitle($title->getSubjectPage());
 		}
 		return false;
@@ -137,12 +138,21 @@ class CategorySkin {
 			$wgLogo = implode('/', [$wgUploadPath, substr($hash, 0, 1), substr($hash, 0, 2), $this->logo]);
 		}
 
-		// apply title manipulation
-		$title->mPrefixedText = $this->prefix.$title->getPrefixedText().$this->suffix;
-
 		// apply custom stylesheet
 		if ($this->hasStyle) {
 			$output->addModules('ext.categoryskins.skin.'.self::categoryToModuleName($this->category));
 		}
+	}
+
+	public function applyTitleChange($template){
+		if (!isset($template->data) || !isset($template->data['headelement'])) {
+			return true;
+		}
+
+		$template->set(
+			'headelement',
+			str_replace('<title>'.htmlspecialchars($template->data['pagetitle']).'</title>', '<title>'.htmlspecialchars($this->prefix.$template->data['title'].$this->suffix).'</title>', $template->data['headelement'])
+		);
+
 	}
 }

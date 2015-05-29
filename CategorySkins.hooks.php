@@ -29,6 +29,21 @@ class CategorySkinsHooks {
 	}
 
 	/**
+	 * Check to see if a title needed to be overriden for the page.
+	 *
+	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateOutputPageBeforeExec
+	 * @access	public
+	 * @return	bool
+	 */
+	public static function onSkinTemplateOutputPageBeforeExec (&$skin, &$template) {
+		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
+		if ($cs_skin) {
+			$cs_skin->applyTitleChange($template);
+		}
+		return true;
+	}
+
+	/**
 	 * Setups and Modifies Database Information
 	 *
 	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
