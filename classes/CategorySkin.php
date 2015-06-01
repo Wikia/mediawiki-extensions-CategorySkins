@@ -104,6 +104,12 @@ class CategorySkin {
 				$cats[] = "'".$db->strencode(substr($category, strpos($category, ':')+1))."'";
 			}
 		}
+
+		if (preg_match('#Category:#', $title->getPrefixedText())) {
+			$page = str_replace(" ", "_", $title->getPrefixedText());
+			$cats[] = "'".$db->strencode(substr($page, strpos($page, ':')+1))."'";
+		}
+
 		if (!empty($cats)) {
 			$cats = implode(',', $cats);
 			// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
@@ -115,9 +121,9 @@ class CategorySkin {
 
 		// if we don't have a skin yet, check categories on subject page (if this is a talk page)
 		if ($title->isTalkPage()) {
-
 			return self::newFromTitle($title->getSubjectPage());
 		}
+
 		return false;
 	}
 
