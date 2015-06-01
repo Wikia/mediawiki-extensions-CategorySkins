@@ -44,6 +44,21 @@ class CategorySkinsHooks {
 	}
 
 	/**
+	 * Check to see if a body class needs to be on a page.
+	 *
+	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/OutputPageBodyAttributes
+	 * @access	public
+	 * @return	bool
+	 */
+	public static function onOutputPageBodyAttributes ($out, $sk, &$bodyAttrs) {
+		$cs_skin = CategorySkin::newFromTitle($sk->getTitle());
+		if ($cs_skin) {
+			$cs_skin->applyBodyChange($bodyAttrs);
+		}
+		return true;
+	}
+
+	/**
 	 * Setups and Modifies Database Information
 	 *
 	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates

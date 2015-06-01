@@ -89,6 +89,25 @@ class CategorySkin {
 	}
 
 	/**
+	 * Enforce body class name (No space, convert camel case to hyphens, and remove extra hyphens)
+	 *
+	 * @param string	Category name
+	 * @return string	Cleaned up body class name
+	 */
+	public static function categoryToBodyClassName($name) {
+		// Convert spaces to hyphens.
+		$name = str_replace(" ", "-", $name);
+
+		// Convert camel case to hyphen separators.
+		$name = preg_replace('#([a-zA-Z])(?=[A-Z])#', '$1-', $name);
+
+		// Let us get rid of all extra hyphens and lowercase it all;
+		$name = 'cs-'.strtolower(preg_replace('#-{2,}#', '-', $name));
+
+		return $name;
+	}
+
+	/**
 	 * Recursive lookup through nested categories to find one for which we have a style
 	 *
 	 * @param  Title
@@ -165,5 +184,9 @@ class CategorySkin {
 			'headelement',
 			str_replace('<title>'.htmlspecialchars($template->data['pagetitle']).'</title>', '<title>'.htmlspecialchars($this->prefix.$template->data['title'].$this->suffix).'</title>', $template->data['headelement'])
 		);
+	}
+
+	public function applyBodyChange($bodyAttributes) {
+		$bodyAttributes['class'] .= ' '.self::categoryToBodyClassName($this->category);
 	}
 }
