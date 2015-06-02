@@ -98,9 +98,6 @@ class CategorySkin {
 		// Convert spaces to hyphens.
 		$name = str_replace(" ", "-", $name);
 
-		// Convert camel case to hyphen separators.
-		$name = preg_replace('#([a-zA-Z])(?=[A-Z])#', '$1-', $name);
-
 		// Get rid of all extra hyphens and lowercase it all;
 		$name = 'cs-'.mb_strtolower(preg_replace('#-{2,}#', '-', $name), 'UTF-8');
 
