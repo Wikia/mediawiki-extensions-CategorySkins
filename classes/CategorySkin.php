@@ -211,7 +211,7 @@ class CategorySkin {
 	 * @param	array	$bodyAttributes
 	 * @return	void
 	 */
-	public function applyBodyChange($bodyAttributes) {
+	public function applyBodyChange(&$bodyAttributes) {
 		$bodyAttributes['class'] .= ' '.self::categoryToBodyClassName($this->category);
 	}
 }
