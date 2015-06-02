@@ -18,12 +18,11 @@
 $wgExtensionCredits['specialpage'][] = [
 	'path'           => __FILE__,
 	'name'           => 'Category Skins',
-	'author'         => 'Curse Wiki Team',
+	'author'         => ['Curse Wiki Team'],
 	'descriptionmsg' => 'categoryskins_description',
 	'version'        => '1.0' //Must be a string or Mediawiki will turn it into an integer.
 ];
 
-// Uncomment if applicable
 $wgAvailableRights[] = 'skincategories';
 
 /******************************************/
@@ -33,21 +32,17 @@ $wgMessagesDirs['CategorySkins'] = __DIR__.'/i18n';
 $wgExtensionMessagesFiles['CategorySkins']      = __DIR__."/CategorySkins.i18n.php";
 
 // Classes
-
 $wgAutoloadClasses['CategorySkin']       = __DIR__.'/classes/CategorySkin.php';
 $wgAutoloadClasses['CategorySkinModule'] = __DIR__.'/classes/CategorySkinModule.php';
 $wgAutoloadClasses['CategorySkinsHooks'] = __DIR__.'/CategorySkins.hooks.php';
 
 // Special Pages
-
 $wgAutoloadClasses['SpecialCategorySkins'] = __DIR__."/specials/SpecialCategorySkins.php";
 $wgSpecialPages['CategorySkins']           = 'SpecialCategorySkins';
 
 // Resource modules
-
 $wgResourceModules['ext.categoryskins.special'] = [
 	'styles' => ['css/categoryskins.special.less'],
-	'scripts' => ['js/categoryskins.special.js'],
 	'localBasePath' => __DIR__.'/',
 	'remoteExtPath' => 'CategorySkins',
 	'dependencies' => ['ext.curse.font-awesome'],

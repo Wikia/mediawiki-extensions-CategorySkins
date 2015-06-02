@@ -35,7 +35,7 @@ class CategorySkinsHooks {
 	 * @access	public
 	 * @return	bool
 	 */
-	public static function onSkinTemplateOutputPageBeforeExec (&$skin, &$template) {
+	public static function onSkinTemplateOutputPageBeforeExec(&$skin, &$template) {
 		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
 		if ($cs_skin) {
 			$cs_skin->applyTitleChange($template);
@@ -50,7 +50,7 @@ class CategorySkinsHooks {
 	 * @access	public
 	 * @return	bool
 	 */
-	public static function onOutputPageBodyAttributes ($out, $sk, &$bodyAttrs) {
+	public static function onOutputPageBodyAttributes($out, $sk, &$bodyAttrs) {
 		$cs_skin = CategorySkin::newFromTitle($sk->getTitle());
 		if ($cs_skin) {
 			$cs_skin->applyBodyChange($bodyAttrs);

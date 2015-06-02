@@ -115,7 +115,7 @@ class CategorySkin {
 	 * @return bool|string	True or error message
 	 * @throws MWException
 	 */
-	public static function validateCategory ($category, $allData) {
+	public static function validateCategory($category, $allData) {
 		// Let's check to see if they passed a category or if it is valid
 		if (!$category) {
 			return wfMessage('cs_error_category_required')->text();
