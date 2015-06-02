@@ -169,6 +169,9 @@ class SpecialCategorySkins extends SpecialPage {
 		$row = $db->selectRow('category_skins', ['*'], ['cs_id' => $id], __METHOD__);
 		if ($row) {
 			foreach (array_keys(self::$form) as $k) {
+				if ($k == 'cs_category') {
+					$row->$k = Title::newFromText($row->$k);
+				}
 				$this->getRequest()->setVal($k, $row->$k);
 			}
 			return true;
