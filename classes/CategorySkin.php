@@ -102,7 +102,7 @@ class CategorySkin {
 		$name = preg_replace('#([a-zA-Z])(?=[A-Z])#', '$1-', $name);
 
 		// Get rid of all extra hyphens and lowercase it all;
-		$name = 'cs-'.strtolower(preg_replace('#-{2,}#', '-', $name));
+		$name = 'cs-'.mb_strtolower(preg_replace('#-{2,}#', '-', $name), 'UTF-8');
 
 		return $name;
 	}
