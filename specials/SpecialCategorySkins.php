@@ -44,7 +44,7 @@ class SpecialCategorySkins extends SpecialPage {
 		'cs_category' => [
 			'type' => 'text',
 			'label' => 'Category',
-			'required' => true
+			'validation-callback'  => ['CategorySkin', 'validateCategory'],
 		],
 		'cs_prefix' => [
 			'type' => 'text',
@@ -142,6 +142,8 @@ class SpecialCategorySkins extends SpecialPage {
 	 */
 	public function saveStyle($data) {
 		$db = wfGetDB(DB_MASTER);
+		$title = Title::newFromText($data['cs_category']);
+		$data['cs_category'] = $title->getPrefixedDBkey();
 		if ($data['cs_id']) {
 			$res = $db->update('category_skins', $data, [ 'cs_id' => $data['cs_id'] ], __METHOD__);
 		} else {
@@ -153,7 +155,7 @@ class SpecialCategorySkins extends SpecialPage {
 			return true;
 		}
 
-		return 'Failed to save category skin';
+		return wfMessage("cs_error_failed_skin_save")->text();
 	}
 
 	/**
@@ -201,7 +203,7 @@ class SpecialCategorySkins extends SpecialPage {
 				<tbody>';
 		foreach ($styles as $style) {
 			$html .= '<tr>';
-			$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], $style->cs_category));
+			$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText('Category:'.$style->cs_category)->getLinkUrl()], Title::newFromText($style->cs_category)->getPrefixedText()));
 			$html .= Html::element('td', [], var_export($style->cs_prefix, true));
 			$html .= Html::element('td', [], var_export($style->cs_suffix, true));
 
@@ -215,7 +217,7 @@ class SpecialCategorySkins extends SpecialPage {
 			// Stylesheet Link
 			if ($style->cs_style) {
 				$stylesheetPath = 'Mediawiki:'.$style->cs_category.'.css';
-				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText($stylesheetPath)->getLinkURL()], $stylesheetPath));
+				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>Title::newFromText($stylesheetPath)->getLinkURL()], Title::newFromText($stylesheetPath)->getPrefixedText()));
 			} else {
 				$html .= Html::element('td', ['class' => 'table-center'], 'N/A');
 			}

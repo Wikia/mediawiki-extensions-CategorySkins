@@ -101,10 +101,29 @@ class CategorySkin {
 		// Convert camel case to hyphen separators.
 		$name = preg_replace('#([a-zA-Z])(?=[A-Z])#', '$1-', $name);
 
-		// Let us get rid of all extra hyphens and lowercase it all;
+		// Get rid of all extra hyphens and lowercase it all;
 		$name = 'cs-'.strtolower(preg_replace('#-{2,}#', '-', $name));
 
 		return $name;
+	}
+
+	/**
+	 * Validate category from HTML Form.
+	 *
+	 * @param	string	$category	Category field from the HTML Form
+	 * @param	array	$allData	All the form data
+	 * @return bool|string	True or error message
+	 * @throws MWException
+	 */
+	public static function validateCategory ($category, $allData) {
+		// Let's check to see if they passed a category or if it is valid
+		if (!$category) {
+			return wfMessage('cs_error_category_required')->text();
+		} else if (!Title::newFromText($category)) {
+			return wfMessage('cs_error_invalid_category')->text();
+		}
+
+		return true;
 	}
 
 	/**
@@ -186,6 +205,12 @@ class CategorySkin {
 		);
 	}
 
+	/**
+	 * Apply custom class to the body tag.
+	 *
+	 * @param	array	$bodyAttributes
+	 * @return	void
+	 */
 	public function applyBodyChange($bodyAttributes) {
 		$bodyAttributes['class'] .= ' '.self::categoryToBodyClassName($this->category);
 	}
