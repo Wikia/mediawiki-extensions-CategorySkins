@@ -33,6 +33,25 @@ class SpecialCategorySkins extends SpecialPage {
 	}
 
 	/**
+	 * Validate category from HTML Form.
+	 *
+	 * @param	string	$category	Category field from the HTML Form
+	 * @param	array	$allData	All the form data
+	 * @return bool|string	True or error message
+	 * @throws MWException
+	 */
+	public static function validateCategory($category, $allData) {
+		// Let's check to see if they passed a category or if it is valid
+		if (!$category) {
+			return wfMessage('cs_error_category_required')->text();
+		} else if (!Title::newFromText($category)) {
+			return wfMessage('cs_error_invalid_category')->text();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Form fields
 	 * @var array
 	 */
@@ -44,7 +63,7 @@ class SpecialCategorySkins extends SpecialPage {
 		'cs_category' => [
 			'type' => 'text',
 			'label' => 'Category',
-			'validation-callback'  => ['CategorySkin', 'validateCategory'],
+			'validation-callback'  => ['SpecialCategorySkins', 'validateCategory'],
 		],
 		'cs_prefix' => [
 			'type' => 'text',

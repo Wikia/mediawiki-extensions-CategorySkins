@@ -108,25 +108,6 @@ class CategorySkin {
 	}
 
 	/**
-	 * Validate category from HTML Form.
-	 *
-	 * @param	string	$category	Category field from the HTML Form
-	 * @param	array	$allData	All the form data
-	 * @return bool|string	True or error message
-	 * @throws MWException
-	 */
-	public static function validateCategory($category, $allData) {
-		// Let's check to see if they passed a category or if it is valid
-		if (!$category) {
-			return wfMessage('cs_error_category_required')->text();
-		} else if (!Title::newFromText($category)) {
-			return wfMessage('cs_error_invalid_category')->text();
-		}
-
-		return true;
-	}
-
-	/**
 	 * Recursive lookup through nested categories to find one for which we have a style
 	 *
 	 * @param  Title
