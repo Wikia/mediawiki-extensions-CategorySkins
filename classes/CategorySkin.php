@@ -111,26 +111,38 @@ class CategorySkin {
 	 * @return CategorySkin or false
 	 */
 	public static function newFromTitle(Title $title) {
-		$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
-		// filter out the "Category:" prefix and flatten
-		$db = wfGetDB(DB_SLAVE);
-		$cats = [];
-		foreach ($categoryDepths as $d => $categories) {
-			foreach ($categories as $i => $category) {
-				$cats[] = "'".$db->strencode(substr($category, strpos($category, ':')+1))."'";
+		$cache = wfGetCache( CACHE_ANYTHING );
+		$key = wfMemcKey( 'categoryskins', $title->getDBkey(), 'skin' );
+		$data = $cache->get($key);
+
+		if ($data !== false) {
+			wfDebugLog( 'CategorySkins', 'Retrieved category skin data from Memcache');
+			return $data;
+		} else {
+			wfDebugLog( 'CategorySkins', 'Retrieving category skin data from the DB');
+			$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
+			// filter out the "Category:" prefix and flatten
+			$db = wfGetDB(DB_SLAVE);
+			$cats = [];
+			foreach ($categoryDepths as $d => $categories) {
+				foreach ($categories as $i => $category) {
+					$cats[] = "'" . $db->strencode(substr($category, strpos($category, ':') + 1)) . "'";
+				}
 			}
-		}
 
-		if ($title->getNamespace() == NS_CATEGORY) {
-			$cats[] = "'".$db->strencode($title->getDBkey())."'";
-		}
+			if ($title->getNamespace() == NS_CATEGORY) {
+				$cats[] = "'" . $db->strencode($title->getDBkey()) . "'";
+			}
 
-		if (!empty($cats)) {
-			$cats = implode(',', $cats);
-			// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
-			$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
-			if ($res) {
-				return new CategorySkin((array)$res);
+			if (!empty($cats)) {
+				$cats = implode(',', $cats);
+				// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
+				$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
+				if ($res) {
+					// Cache the results for 5 minutes
+					$cache->set($key, $res, 300);
+					return new CategorySkin((array)$res);
+				}
 			}
 		}
 
