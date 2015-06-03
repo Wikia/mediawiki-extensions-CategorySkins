@@ -121,9 +121,8 @@ class CategorySkin {
 			}
 		}
 
-		if (preg_match('#Category:#', $title->getPrefixedText())) {
-			$page = str_replace(" ", "_", $title->getPrefixedText());
-			$cats[] = "'".$db->strencode(substr($page, strpos($page, ':')+1))."'";
+		if ($title->getNamespace() == NS_CATEGORY) {
+			$cats[] = "'".$db->strencode($title->getDBkey())."'";
 		}
 
 		if (!empty($cats)) {
