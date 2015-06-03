@@ -112,9 +112,9 @@ class CategorySkin {
 	 */
 	public static function newFromTitle(Title $title) {
 		$cache = wfGetCache( CACHE_ANYTHING );
-		$key = wfMemcKey( 'categoryskins', $title->getDBkey(), 'skin' );
+		$key = wfMemcKey( 'categoryskins', $title->getPrefixedDBkey(), 'skin' );
 		$data = $cache->get($key);
-
+		
 		if ($data !== false) {
 			wfDebugLog( 'CategorySkins', 'Retrieved category skin data from Memcache');
 			return new CategorySkin((array)$data);
