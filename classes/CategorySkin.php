@@ -117,7 +117,7 @@ class CategorySkin {
 
 		if ($data !== false) {
 			wfDebugLog( 'CategorySkins', 'Retrieved category skin data from Memcache');
-			return $data;
+			return new CategorySkin((array)$data);
 		} else {
 			wfDebugLog( 'CategorySkins', 'Retrieving category skin data from the DB');
 			$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
