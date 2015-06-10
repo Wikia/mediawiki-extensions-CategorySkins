@@ -74,6 +74,8 @@ class CategorySkinsHooks {
 
 	/**
 	 * Clear cached categories on page save
+	 * @param WikiPage $article   the page that was just saved
+	 * @return true
 	 */
 	public static function onPageContentSaveComplete( $article ) {
 		if ($article && $article->getTitle()) {
