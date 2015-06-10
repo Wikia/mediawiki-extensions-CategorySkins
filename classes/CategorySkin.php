@@ -154,6 +154,15 @@ class CategorySkin {
 		return false;
 	}
 
+	/**
+	 * Clears the cached category skin for the given Title
+	 * @param Title $title
+	 */
+	public static function clearCacheForTitle(Title $title) {
+		$cache = wfGetCache( CACHE_ANYTHING );
+		$key = wfMemcKey( 'categoryskins', $title->getPrefixedDBkey(), 'skin' );
+		$cache->delete($key);
+	}
 
 	/**
 	 * Apply a skin to page's given category

@@ -71,4 +71,14 @@ class CategorySkinsHooks {
 
 		return true;
 	}
+
+	/**
+	 * Clear cached categories on page save
+	 */
+	public static function onPageContentSaveComplete( $article ) {
+		if ($article && $article->getTitle()) {
+			CategorySkin::clearCacheForTitle($article->getTitle());
+		}
+		return true;
+	}
 }

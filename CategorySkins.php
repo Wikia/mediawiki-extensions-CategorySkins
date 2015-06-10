@@ -50,10 +50,11 @@ $wgResourceModules['ext.categoryskins.special'] = [
 ];
 
 // Hooks (uncomment if applicable)
-$wgHooks['BeforeInitialize'][]					= 'CategorySkinsHooks::onBeforeInitialize';
-$wgHooks['LoadExtensionSchemaUpdates'][]		= 'CategorySkinsHooks::onLoadExtensionSchemaUpdates';
-$wgHooks['SkinTemplateOutputPageBeforeExec'][]	= 'CategorySkinsHooks::onSkinTemplateOutputPageBeforeExec';
-$wgHooks['OutputPageBodyAttributes'][]			= 'CategorySkinsHooks::onOutputPageBodyAttributes';
+$wgHooks['BeforeInitialize'][]                 = 'CategorySkinsHooks::onBeforeInitialize';
+$wgHooks['LoadExtensionSchemaUpdates'][]       = 'CategorySkinsHooks::onLoadExtensionSchemaUpdates';
+$wgHooks['SkinTemplateOutputPageBeforeExec'][] = 'CategorySkinsHooks::onSkinTemplateOutputPageBeforeExec';
+$wgHooks['OutputPageBodyAttributes'][]         = 'CategorySkinsHooks::onOutputPageBodyAttributes';
+$wgHooks['PageContentSaveComplete'][]          = 'CategorySkinsHooks::onPageContentSaveComplete';
 
 // Setup functions
 $wgExtensionFunctions[] = 'CategorySkin::injectModules';
