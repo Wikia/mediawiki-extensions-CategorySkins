@@ -1,0 +1,1 @@
+ALTER TABLE /*_*/category_skins ADD `cs_logo_link` varchar(255) NOT NULL default '' AFTER `cs_logo`;

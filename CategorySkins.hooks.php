@@ -59,15 +59,34 @@ class CategorySkinsHooks {
 	}
 
 	/**
+	 * Check to see if the logo needs to have a url replacement done.
+	 *
+	 * @see		https://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateBuildNavUrlsNav_urlsAfterPermalink
+	 * @access	public$revid
+	 * @return	bool
+	 */
+	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink( &$skin, &$nav_urls, &$revid, &$revid ) {
+		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
+		if ($cs_skin) {
+			$cs_skin->applyLogoLinkChange($nav_urls);
+		}
+		return true;
+	}
+
+	/**
 	 * Setups and Modifies Database Information
 	 *
 	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
 	 * @access	public
+	 * @param	DatabaseUpdater	$updater	Database update object
 	 * @return	boolean	true
 	 */
 	static public function onLoadExtensionSchemaUpdates(DatabaseUpdater $updater) {
 		$extDir = __DIR__;
 		$updater->addExtensionUpdate(array('addTable', 'category_skins', "{$extDir}/install/sql/create_table_category_skins.sql", true));
+
+		//2015-06-16
+		$updater->addExtensionUpdate(array('addField', 'category_skins', 'cs_logo_link', "{$extDir}/upgrade/sql/categoryskins_upgrade_add_cs_logo_link.sql", true));
 
 		return true;
 	}

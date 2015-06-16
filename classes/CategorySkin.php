@@ -38,6 +38,12 @@ class CategorySkin {
 	private $logo;
 
 	/**
+	 * Logo page link
+	 * @var	string
+	 */
+	private	$logoLink;
+
+	/**
 	 * Has a stylesheet flag
 	 * @var bool
 	 */
@@ -53,6 +59,7 @@ class CategorySkin {
 		$this->prefix = $row['cs_prefix'];
 		$this->suffix = $row['cs_suffix'];
 		$this->logo = $row['cs_logo'];
+		$this->logoLink = $row['cs_logo_link'];
 		$this->hasStyle = $row['cs_style'];
 	}
 
@@ -211,5 +218,12 @@ class CategorySkin {
 	 */
 	public function applyBodyChange(&$bodyAttributes) {
 		$bodyAttributes['class'] .= ' '.self::categoryToBodyClassName($this->category);
+	}
+
+	public function applyLogoLinkChange(&$navUrls) {
+		if (!$this->logoLink) {
+			return;
+		}
+		$navUrls['mainpage']['href'] = "/".$this->logoLink;
 	}
 }

@@ -52,6 +52,25 @@ class SpecialCategorySkins extends SpecialPage {
 	}
 
 	/**
+	 * Validate logo page link from HTML Form.
+	 *
+	 * @param	string	$logoLink	Logo link from the HTML Form
+	 * @param	array	$allData	All the form data
+	 * @return bool|string	True or error message
+	 * @throws MWException
+	 */
+	public static function validateLogoLink($logoLink, $allData) {
+		// Let's check to see if they passed a category or if it is valid
+		if (!$allData['cs_logo'] && $logoLink) {
+			return wfMessage('cs_error_logo_required')->text();
+		} else if (!Title::newFromText($logoLink) && $allData['cs_logo']) {
+			return wfMessage('cs_error_invalid_logo_page')->text();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Form fields
 	 * @var array
 	 */
@@ -77,6 +96,12 @@ class SpecialCategorySkins extends SpecialPage {
 			'type' => 'text',
 			'label' => 'Replace logo',
 			'help' => 'Give the name of an uploaded file to replace the wiki logo for the pages in this category'
+		],
+		'cs_logo_link' => [
+			'type'	=>	'text',
+			'label'	=>	'Logo Link',
+			'help'	=>	'Insert the page where the logo will to link to when a user clicks on it.',
+			'validation-callback'	=>	['SpecialCategorySkins', 'validateLogoLink'],
 		],
 		'cs_style' => [
 			'type' => 'check',
@@ -217,6 +242,7 @@ class SpecialCategorySkins extends SpecialPage {
 						<th>'.wfMessage('cs_title_prefix')->escaped().'</td>
 						<th>'.wfMessage('cs_title_suffix')->escaped().'</td>
 						<th>'.wfMessage('cs_logo')->escaped().'</td>
+						<th>'.wfMessage('cs_logo_link')->escaped().'</th>
 						<th>'.wfMessage('cs_stylesheet')->escaped().'</td>
 						<th>'.wfMessage('cs_edit')->escaped().'</td>
 						<th>'.wfMessage('cs_delete')->escaped().'</td>
@@ -234,6 +260,12 @@ class SpecialCategorySkins extends SpecialPage {
 				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>$logo->getLinkUrl()], $style->cs_logo));
 			} else {
 				$html .= Html::element('td', [], htmlspecialchars($style->cs_logo));
+			}
+
+			if ($logoLink = Title::newFromText($style->cs_logo_link)) {
+				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>$logoLink->getLinkUrl()], $style->cs_logo_link));
+			} else {
+				$html .= Html::element('td', ['class' => 'table-center'], 'N/A');
 			}
 
 			// Stylesheet Link

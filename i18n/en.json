@@ -10,6 +10,7 @@
 	"cs_title_prefix": "Title Prefix",
 	"cs_title_suffix": "Title Suffix",
 	"cs_logo": "Logo",
+	"cs_logo_link": "Logo Link",
 	"cs_stylesheet": "Stylesheet",
 	"cs_edit": "Edit",
 	"cs_delete": "Delete",
@@ -18,7 +19,9 @@
 	"cs_error_deleting_skin": "Error while deleting skin",
 	"cs_error_failed_skin_save": "Failed to save category skin",
 	"cs_error_invalid_category": "Invalid Category name.",
+	"cs_error_invalid_logo_page": "Invalid page.",
 	"cs_error_load_skin_for_id": "Could not load skin for ID: $1",
+	"cs_error_logo_required": "Logo is required for a custom page link",
 	"cs_error_no_id": "No id specified",
 	"cs_confirm_skin_delete": "Confirm deletion of skin for Category:$1"
 }
