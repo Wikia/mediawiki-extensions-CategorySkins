@@ -60,7 +60,7 @@ class SpecialCategorySkins extends SpecialPage {
 	 * @throws MWException
 	 */
 	public static function validateLogoLink($logoLink, $allData) {
-		// Let's check to see if they passed a category or if it is valid
+		// Let's check to see if they passed a page is valid
 		if (!$allData['cs_logo'] && $logoLink) {
 			return wfMessage('cs_error_logo_required')->text();
 		} else if (!Title::newFromText($logoLink) && $allData['cs_logo']) {

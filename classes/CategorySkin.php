@@ -220,6 +220,12 @@ class CategorySkin {
 		$bodyAttributes['class'] .= ' '.self::categoryToBodyClassName($this->category);
 	}
 
+	/**
+	 * Adjust mainpage URL to be the custom category skins one.
+	 *
+	 * @param	array	$navUrls
+	 * @return	mixed|void
+	 */
 	public function applyLogoLinkChange(&$navUrls) {
 		if (!$this->logoLink) {
 			return;
