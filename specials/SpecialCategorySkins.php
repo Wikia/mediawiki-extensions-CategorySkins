@@ -82,7 +82,7 @@ class SpecialCategorySkins extends SpecialPage {
 		'cs_category' => [
 			'type' => 'text',
 			'label' => 'Category',
-			'validation-callback'  => ['SpecialCategorySkins', 'validateCategory'],
+			'validation-callback'	=> ['SpecialCategorySkins', 'validateCategory'],
 		],
 		'cs_prefix' => [
 			'type' => 'text',
@@ -188,6 +188,7 @@ class SpecialCategorySkins extends SpecialPage {
 		$db = wfGetDB(DB_MASTER);
 		$title = Title::newFromText($data['cs_category']);
 		$data['cs_category'] = $title->getPrefixedDBkey();
+		$data['cs_logo'] = str_replace(" ", "_", $data['cs_logo']);
 		if ($data['cs_id']) {
 			$res = $db->update('category_skins', $data, [ 'cs_id' => $data['cs_id'] ], __METHOD__);
 		} else {
@@ -215,6 +216,8 @@ class SpecialCategorySkins extends SpecialPage {
 			foreach (array_keys(self::$form) as $k) {
 				if ($k == 'cs_category') {
 					$row->$k = Title::newFromText($row->$k);
+				} elseif ($k == 'cs_logo') {
+					$row->$k = str_replace("_", " ", $row->$k);
 				}
 				$this->getRequest()->setVal($k, $row->$k);
 			}
@@ -257,7 +260,7 @@ class SpecialCategorySkins extends SpecialPage {
 
 			// Logo
 			if ($logo = Title::newFromText('File:'.$style->cs_logo)) {
-				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>$logo->getLinkUrl()], $style->cs_logo));
+				$html .= Html::rawElement('td', [], Html::element('a', ['href'=>$logo->getLinkUrl()], str_replace("_", " ", $style->cs_logo)));
 			} else {
 				$html .= Html::element('td', [], htmlspecialchars($style->cs_logo));
 			}

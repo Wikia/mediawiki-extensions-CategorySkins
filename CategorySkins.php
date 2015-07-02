@@ -20,7 +20,7 @@ $wgExtensionCredits['specialpage'][] = [
 	'name'           => 'Category Skins',
 	'author'         => ['Curse Wiki Team'],
 	'descriptionmsg' => 'categoryskins_description',
-	'version'        => '1.0' //Must be a string or Mediawiki will turn it into an integer.
+	'version'        => '1.1' //Must be a string or Mediawiki will turn it into an integer.
 ];
 
 $wgAvailableRights[] = 'skincategories';
@@ -37,8 +37,8 @@ $wgAutoloadClasses['CategorySkinModule'] = __DIR__.'/classes/CategorySkinModule.
 $wgAutoloadClasses['CategorySkinsHooks'] = __DIR__.'/CategorySkins.hooks.php';
 
 // Special Pages
-$wgAutoloadClasses['SpecialCategorySkins'] = __DIR__."/specials/SpecialCategorySkins.php";
-$wgSpecialPages['CategorySkins']           = 'SpecialCategorySkins';
+$wgAutoloadClasses['SpecialCategorySkins']	= __DIR__."/specials/SpecialCategorySkins.php";
+$wgSpecialPages['CategorySkins']			= 'SpecialCategorySkins';
 
 // Resource modules
 $wgResourceModules['ext.categoryskins.special'] = [

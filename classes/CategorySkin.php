@@ -183,6 +183,7 @@ class CategorySkin {
 
 		// apply logo
 		if ($this->logo) {
+			$this->logo = str_replace(" ", "_", $this->logo);
 			$hash = md5($this->logo);
 			$wgLogo = implode('/', [$wgUploadPath, substr($hash, 0, 1), substr($hash, 0, 2), $this->logo]);
 		}
