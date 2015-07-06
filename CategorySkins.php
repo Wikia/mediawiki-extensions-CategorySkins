@@ -43,6 +43,7 @@ $wgSpecialPages['CategorySkins']			= 'SpecialCategorySkins';
 // Resource modules
 $wgResourceModules['ext.categoryskins.special'] = [
 	'styles' => ['css/categoryskins.special.less'],
+	'scripts' => ['js/categoryskins.js'],
 	'localBasePath' => __DIR__.'/',
 	'remoteExtPath' => 'CategorySkins',
 	'dependencies' => ['ext.curse.font-awesome'],

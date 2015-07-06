@@ -86,11 +86,14 @@ class SpecialCategorySkins extends SpecialPage {
 		],
 		'cs_prefix' => [
 			'type' => 'text',
+			'cssclass' => 'cs_prefix',
 			'label' => 'Title prefix'
 		],
 		'cs_suffix' => [
 			'type' => 'text',
-			'label' => 'Title suffix'
+			'cssclass' => 'cs_suffix',
+			'label' => 'Title suffix',
+			'help' => 'Title preview: <span class="cs_page_example">Example Page Title</span>'
 		],
 		'cs_logo' => [
 			'type' => 'text',
