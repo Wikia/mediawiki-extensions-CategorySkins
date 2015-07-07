@@ -2,49 +2,38 @@ function CategorySkins($) {
 	'use strict';
 
 	this.init = function() {
-		$('.cs_prefix').on('focus', skins.highlightPrefix);
-		$('.cs_suffix').on('focus', skins.highlightSuffix);
-		$('.cs_prefix').on('focusout', skins.removePrefixBold);
-		$('.cs_suffix').on('focusout', skins.removeSuffixBold);
-		$('.cs_prefix input').on('keyup', skins.updatePrefix);
-		$('.cs_suffix input').on('keyup', skins.updateSuffix);
+		var prefixField = $('.cs_prefix input'),
+		    suffixField = $('.cs_suffix input');
 
+		$('.cs_page_example').html('<span id="skin_prefix"></span>Example Page Title<span id="skin_suffix"></span>');
 
-		var prefix = $('.cs_prefix input').val();
-		var suffix = $('.cs_suffix input').val();
+		// load data fields so events know which preview too update
+		prefixField.data('preview', $('.cs_page_example #skin_prefix'));
+		suffixField.data('preview', $('.cs_page_example #skin_suffix'));
 
-		$('.cs_page_example').html('<span id="skin_prefix">'+prefix+'</span>Example Page Title<span id="skin_suffix">'+suffix+'</span>');
+		// add event listeners
+		prefixField.add(suffixField)
+			.on('focus',    titlePreview.highlight)
+			.on('focusout', titlePreview.unhighlight)
+			.on('keyup',    titlePreview.update);
+
+		// do initial update from initial values
+		titlePreview.update.call(prefixField);
+		titlePreview.update.call(suffixField);
 	};
 
-	var skins = {
-		highlightPrefix: function() {
-			$('#skin_prefix').css('font-weight', 'bold');
-
+	var titlePreview = {
+		highlight: function() {
+			$(this).data('preview').css('font-weight', 'bold');
 		},
 
-		highlightSuffix: function() {
-			$('#skin_suffix').css('font-weight', 'bold');
+		unhighlight: function() {
+			$(this).data('preview').removeAttr('style');
 		},
 
-		updatePrefix: function() {
-			$(this).keyup(function() {
-				$('#skin_prefix').html($(this).val());
-			});
+		update: function() {
+			$(this).data('preview').text($(this).val());
 		},
-
-		updateSuffix: function() {
-			$(this).keyup(function() {
-				$('#skin_suffix').html($(this).val());
-			});
-		},
-
-		removePrefixBold: function() {
-			$('#skin_prefix').removeAttr('style');
-		},
-
-		removeSuffixBold: function() {
-			$('#skin_suffix').removeAttr('style');
-		}
 	};
 }
 
