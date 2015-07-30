@@ -59,4 +59,6 @@ $wgHooks['OutputPageBodyAttributes'][]							= 'CategorySkinsHooks::onOutputPage
 $wgHooks['PageContentSaveComplete'][]							= 'CategorySkinsHooks::onPageContentSaveComplete';
 
 // Setup functions
-$wgExtensionFunctions[] = 'CategorySkin::injectModules';
+if (!MW_PHPUNIT_TEST) {
+	$wgExtensionFunctions[] = 'CategorySkin::injectModules';
+}
