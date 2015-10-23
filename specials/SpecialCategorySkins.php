@@ -28,7 +28,7 @@ class SpecialCategorySkins extends SpecialPage {
 	 * Get group name
 	 * @return string
 	 */
-	public function getGroupName() {
+	protected function getGroupName() {
 		return 'pages';
 	}
 
