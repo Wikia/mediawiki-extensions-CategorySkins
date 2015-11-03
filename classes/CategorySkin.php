@@ -97,7 +97,7 @@ class CategorySkin {
 	 * @return string	Cleaned up module name
 	 */
 	public static function categoryToModuleName($name) {
-		return substr(str_replace(['|', ',', '!', ':'], '', $name), 0, 200);
+		return substr(str_replace(['|', ',', '!'], '', $name), 0, 200);
 	}
 
 	/**
