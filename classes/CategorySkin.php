@@ -70,6 +70,7 @@ class CategorySkin {
 	 */
 	public static function injectModules() {
 		global $wgResourceModules;
+
 		$db = wfGetDB(DB_SLAVE);
 		$res = $db->select(
 			['category_skins'],
@@ -77,7 +78,11 @@ class CategorySkin {
 			[],
 			__METHOD__
 		);
-		if (empty($res)) return;
+
+		if (empty($res)) {
+			return
+		};
+
 		foreach ($res as $cs) {
 			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
 				'class' => 'CategorySkinModule'
@@ -92,7 +97,7 @@ class CategorySkin {
 	 * @return string	Cleaned up module name
 	 */
 	public static function categoryToModuleName($name) {
-		return substr(str_replace(['|',',','!'], '', $name), 0, 200);
+		return substr(str_replace(['|', ',', '!', ':'], '', $name), 0, 200);
 	}
 
 	/**
@@ -145,7 +150,13 @@ class CategorySkin {
 		if (!empty($cats)) {
 			$cats = implode(',', $cats);
 			// SELECT * FROM catstyles WHERE category IN (implode($cats, ',')) ORDER BY FIELD(catstyles.category, implode($cats, ',')) LIMIT 1
-			$res = $db->selectRow('category_skins', ['*'], ["cs_category IN ($cats)"], __METHOD__, ['ORDER BY' => "FIELD(cs_category, $cats)"]);
+			$res = $db->selectRow(
+				'category_skins',
+				['*'],
+				["cs_category IN ($cats)"],
+				__METHOD__,
+				['ORDER BY' => "FIELD(cs_category, $cats)"]
+			);
 			if ($res) {
 				// Cache the results for 5 minutes
 				$cache->set($key, $res, 300);

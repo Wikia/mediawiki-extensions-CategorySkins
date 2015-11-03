@@ -31,16 +31,16 @@ $wgAvailableRights[] = 'skincategories';
 $wgMessagesDirs['CategorySkins'] = __DIR__.'/i18n';
 $wgExtensionMessagesFiles['CategorySkins']      = __DIR__."/CategorySkins.i18n.php";
 
-// Classes
+//Classes.
 $wgAutoloadClasses['CategorySkin']       = __DIR__.'/classes/CategorySkin.php';
 $wgAutoloadClasses['CategorySkinModule'] = __DIR__.'/classes/CategorySkinModule.php';
 $wgAutoloadClasses['CategorySkinsHooks'] = __DIR__.'/CategorySkins.hooks.php';
 
-// Special Pages
+//Special Pages.
 $wgAutoloadClasses['SpecialCategorySkins']	= __DIR__."/specials/SpecialCategorySkins.php";
 $wgSpecialPages['CategorySkins']			= 'SpecialCategorySkins';
 
-// Resource modules
+//Resource modules.
 $wgResourceModules['ext.categoryskins.special'] = [
 	'styles' => ['css/categoryskins.special.less'],
 	'scripts' => ['js/categoryskins.js'],
@@ -50,7 +50,7 @@ $wgResourceModules['ext.categoryskins.special'] = [
 	'position' => 'top',
 ];
 
-// Hooks (uncomment if applicable)
+//Hooks
 $wgHooks['BeforeInitialize'][]									= 'CategorySkinsHooks::onBeforeInitialize';
 $wgHooks['LoadExtensionSchemaUpdates'][]						= 'CategorySkinsHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['SkinTemplateOutputPageBeforeExec'][]					= 'CategorySkinsHooks::onSkinTemplateOutputPageBeforeExec';
@@ -58,7 +58,7 @@ $wgHooks['SkinTemplateBuildNavUrlsNav_urlsAfterPermalink'][]	= 'CategorySkinsHoo
 $wgHooks['OutputPageBodyAttributes'][]							= 'CategorySkinsHooks::onOutputPageBodyAttributes';
 $wgHooks['PageContentSaveComplete'][]							= 'CategorySkinsHooks::onPageContentSaveComplete';
 
-// Setup functions
-if (!MW_PHPUNIT_TEST) {
+//Setup functions.
+if (!defined('MW_PHPUNIT_TEST')) {
 	$wgExtensionFunctions[] = 'CategorySkin::injectModules';
 }

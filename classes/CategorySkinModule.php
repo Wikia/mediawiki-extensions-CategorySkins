@@ -20,8 +20,11 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	 * @return Array: List of pages
 	 */
 	protected function getPages( \ResourceLoaderContext $context ) {
-		return [ // drop first 23 characters (ext.categoryskins.skin.)
-			'MediaWiki:'.substr($this->name, 23).'.css' => [ 'type' => 'style' ]
+		//Drop first 23 characters. (ext.categoryskins.skin.)
+		return [
+			'MediaWiki:'.substr($this->name, 23).'.css' => [
+				'type' => 'style'
+			]
 		];
 	}
 
