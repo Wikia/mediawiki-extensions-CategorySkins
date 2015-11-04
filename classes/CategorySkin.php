@@ -81,7 +81,7 @@ class CategorySkin {
 
 		if (empty($res)) {
 			return
-		};
+		}
 
 		foreach ($res as $cs) {
 			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
