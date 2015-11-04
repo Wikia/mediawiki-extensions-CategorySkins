@@ -80,7 +80,7 @@ class CategorySkin {
 		);
 
 		if (empty($res)) {
-			return
+			return;
 		}
 
 		foreach ($res as $cs) {
