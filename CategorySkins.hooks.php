@@ -65,7 +65,7 @@ class CategorySkinsHooks {
 	 * @access	public
 	 * @return	bool
 	 */
-	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink( &$skin, &$nav_urls, &$revid, &$revid ) {
+	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink( &$skin, &$nav_urls, &$revid, &$revidDuplicate ) {
 		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
 		if ($cs_skin) {
 			$cs_skin->applyLogoLinkChange($nav_urls);
