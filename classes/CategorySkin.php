@@ -71,10 +71,6 @@ class CategorySkin {
 	public static function injectModules() {
 		global $wgResourceModules;
 
-		if (defined('MW_PHPUNIT_TEST') || defined('MW_UPDATER')) {
-			return;
-		}
-
 		$db = wfGetDB(DB_SLAVE);
 		$res = $db->select(
 			['category_skins'],
