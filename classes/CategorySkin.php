@@ -137,6 +137,7 @@ class CategorySkin {
 		
 		wfDebugLog( 'CategorySkins', 'Retrieving category skin data from the DB');
 		$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
+
 		// filter out the "Category:" prefix and flatten
 		$db = wfGetDB(DB_SLAVE);
 		$cats = [];
@@ -156,7 +157,7 @@ class CategorySkin {
 			$res = $db->selectRow(
 				'category_skins',
 				['*'],
-				["cs_category IN ($cats)"],
+				["cs_category IN ($cats)"], //This is intentionally done this way instead of an array due to $cats being used for the sort order below.
 				__METHOD__,
 				['ORDER BY' => "FIELD(cs_category, $cats)"]
 			);
@@ -188,9 +189,10 @@ class CategorySkin {
 	/**
 	 * Apply a skin to page's given category
 	 *
-	 * @param Title $title
-	 * @param OutputPage $output
-	 * @return void
+	 * @access	public
+	 * @param	Title	$title
+	 * @param	OutputPage	$output
+	 * @return	void
 	 */
 	public function apply(Title &$title, OutputPage $output) {
 		global $wgUploadPath, $wgLogo;
