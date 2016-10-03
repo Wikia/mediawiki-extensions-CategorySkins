@@ -1,0 +1,56 @@
+{
+	"name": "Category Skins",
+	"version": "1.1",
+	"author": [
+		"Curse Wiki Team"
+	],
+	"descriptionmsg": "categoryskins_description",
+	"type": "specialpage",
+	"AvailableRights": [
+		"skincategories"
+	],
+	"ExtensionFunctions": [
+		"CategorySkin::injectModules"
+	],
+	"SpecialPages": {
+		"CategorySkins": "SpecialCategorySkins"
+	},
+	"MessagesDirs": {
+		"CategorySkins": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"CategorySkin": "classes/CategorySkin.php",
+		"CategorySkinModule": "classes/CategorySkinModule.php",
+		"CategorySkinsHooks": "CategorySkins.hooks.php",
+		"SpecialCategorySkins": "specials/SpecialCategorySkins.php"
+	},
+	"ResourceModules": {
+		"ext.categoryskins.special": {
+			"styles": [
+				"css/categoryskins.special.less"
+			],
+			"scripts": [
+				"js/categoryskins.js"
+			],
+			"dependencies": [
+				"ext.curse.font-awesome"
+			],
+			"position": "top"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "CategorySkins"
+	},
+	"Hooks": {
+		"BeforeInitialize": "CategorySkinsHooks::onBeforeInitialize",
+		"LoadExtensionSchemaUpdates": "CategorySkinsHooks::onLoadExtensionSchemaUpdates",
+		"SkinTemplateOutputPageBeforeExec": "CategorySkinsHooks::onSkinTemplateOutputPageBeforeExec",
+		"SkinTemplateBuildNavUrlsNav_urlsAfterPermalink": "CategorySkinsHooks::onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink",
+		"OutputPageBodyAttributes": "CategorySkinsHooks::onOutputPageBodyAttributes",
+		"PageContentSaveComplete": "CategorySkinsHooks::onPageContentSaveComplete"
+	},
+	"manifest_version": 1
+}

@@ -66,27 +66,30 @@ class CategorySkin {
 	/**
 	 * Injects styles into the Resource Loader
 	 *
+	 * @access	public
 	 * @return	void
 	 */
 	public static function injectModules() {
 		global $wgResourceModules;
 
-		$db = wfGetDB(DB_SLAVE);
-		$res = $db->select(
-			['category_skins'],
-			['cs_category'],
-			[],
-			__METHOD__
-		);
+		if (!defined('MW_PHPUNIT_TEST') && !defined('MW_UPDATER') && !defined('RUN_MAINTENANCE_IF_MAIN') && !defined('DO_MAINTENANCE')) {
+			$db = wfGetDB(DB_SLAVE);
+			$res = $db->select(
+				['category_skins'],
+				['cs_category'],
+				[],
+				__METHOD__
+			);
 
-		if (empty($res)) {
-			return;
-		}
+			if (empty($res)) {
+				return;
+			}
 
-		foreach ($res as $cs) {
-			$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
-				'class' => 'CategorySkinModule'
-			];
+			foreach ($res as $cs) {
+				$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
+					'class' => 'CategorySkinModule'
+				];
+			}
 		}
 	}
 
