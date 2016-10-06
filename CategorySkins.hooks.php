@@ -14,6 +14,38 @@
 
 class CategorySkinsHooks {
 	/**
+	 * Current Page Title
+	 *
+	 * @var	object
+	 */
+	static private $title;
+
+	/**
+	 * Current CategorySkin
+	 *
+	 * @var	object
+	 */
+	static private $categorySkin;
+
+	/**
+	 * Set the current page title object only once.
+	 *
+	 * @access	public
+	 * @param	object	Title
+	 * @return	void
+	 */
+	static private function initSkin($title) {
+		if ($title === null) {
+			return false;
+		}
+		if (self::$title == null || !$title->equals(self::$title)) {
+			self::$categorySkin = CategorySkin::newFromTitle($title);
+			self::$title = $title;
+		}
+		return self::$categorySkin;
+	}
+
+	/**
 	 * Check to see if a skin needs to be applied to the page.
 	 *
 	 * @see		http://www.mediawiki.org/wiki/Manual:Hooks/BeforeInitialize
@@ -21,8 +53,8 @@ class CategorySkinsHooks {
 	 * @return	bool	true
 	 */
 	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
-		$skin = CategorySkin::newFromTitle($title);
-		if ($skin) {
+		$skin = self::initSkin($title);
+		if ($skin !== false) {
 			$skin->apply($title, $output);
 		}
 		return true;
@@ -36,7 +68,7 @@ class CategorySkinsHooks {
 	 * @return	bool
 	 */
 	public static function onSkinTemplateOutputPageBeforeExec(&$skin, &$template) {
-		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
+		$cs_skin = self::initSkin($skin->getTitle());
 		if ($cs_skin) {
 			$cs_skin->applyTitleChange($template);
 		}
@@ -51,8 +83,8 @@ class CategorySkinsHooks {
 	 * @return	bool
 	 */
 	public static function onOutputPageBodyAttributes($out, $sk, &$bodyAttrs) {
-		$cs_skin = CategorySkin::newFromTitle($sk->getTitle());
-		if ($cs_skin) {
+		$cs_skin = self::initSkin($sk->getTitle());
+		if ($cs_skin !== false) {
 			$cs_skin->applyBodyChange($bodyAttrs);
 		}
 		return true;
@@ -66,8 +98,8 @@ class CategorySkinsHooks {
 	 * @return	bool
 	 */
 	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink( &$skin, &$nav_urls, &$revid, &$revidDuplicate ) {
-		$cs_skin = CategorySkin::newFromTitle($skin->getTitle());
-		if ($cs_skin) {
+		$cs_skin = self::initSkin($skin->getTitle());
+		if ($cs_skin !== false) {
 			$cs_skin->applyLogoLinkChange($nav_urls);
 		}
 		return true;

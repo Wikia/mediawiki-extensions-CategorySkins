@@ -73,20 +73,53 @@ class CategorySkin {
 		global $wgResourceModules;
 
 		if (!defined('MW_PHPUNIT_TEST') && !defined('MW_UPDATER') && !defined('RUN_MAINTENANCE_IF_MAIN') && !defined('DO_MAINTENANCE')) {
-			$db = wfGetDB(DB_SLAVE);
-			$res = $db->select(
-				['category_skins'],
-				['cs_category'],
-				[],
-				__METHOD__
-			);
-
-			if (empty($res)) {
-				return;
+			$cacheKey = 'categoryskins';
+			$redis = RedisCache::getClient('cache');
+			$cached = false;
+			if ($redis !== false) {
+				if ($redis->exists($cacheKey)) {
+					$categories = $redis->sMembers($cacheKey);
+					$cached = true;
+				}
 			}
 
-			foreach ($res as $cs) {
-				$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($cs->cs_category)] = [
+			if (!$cached) {
+				$db = wfGetDB(DB_SLAVE);
+				$res = $db->select(
+					['category_skins'],
+					['cs_category'],
+					['cs_style' => 1],
+					__METHOD__
+				);
+				if ($redis !== false) {
+					$redis->del($cacheKey);
+				}
+
+				$categories = [];
+				foreach ($res as $cs) {
+					$category = trim($cs->cs_category);
+					if (empty($category)) {
+						continue;
+					}
+
+					if ($redis !== false) {
+						$redis->sAdd($cacheKey, $category);
+					}
+					$categories[] = $category;
+				}
+
+				if ($redis !== false) {
+					$redis->expire($cacheKey, 300);
+				}
+			}
+
+			foreach ($categories as $key => $category) {
+				if (empty($category)) {
+					unset($categories[$key]);
+					continue;
+				}
+
+				$wgResourceModules['ext.categoryskins.skin.'.self::categoryToModuleName($category)] = [
 					'class' => 'CategorySkinModule'
 				];
 			}
