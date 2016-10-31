@@ -169,7 +169,7 @@ class CategorySkin {
 		}
 		
 		wfDebugLog( 'CategorySkins', 'Retrieving category skin data from the DB');
-		$categoryDepths = Curse::array_keys_recursive($title->getParentCategoryTree());
+		$categoryDepths = HydraCore::array_keys_recursive($title->getParentCategoryTree());
 
 		// filter out the "Category:" prefix and flatten
 		$db = wfGetDB(DB_SLAVE);

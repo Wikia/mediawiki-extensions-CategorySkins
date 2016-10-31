@@ -282,8 +282,8 @@ class SpecialCategorySkins extends SpecialPage {
 				$html .= Html::element('td', ['class' => 'table-center'], 'N/A');
 			}
 
-			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('pencil')));
-			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], Curse::awesomeIcon('trash')));
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('pencil')));
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('trash')));
 		}
 		$html .= '
 				</tbody>
