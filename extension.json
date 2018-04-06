@@ -35,7 +35,7 @@
 				"js/categoryskins.js"
 			],
 			"dependencies": [
-				"ext.hydraCore.font-awesome"
+				"ext.hydraCore.font-awesome.styles"
 			],
 			"position": "top"
 		}

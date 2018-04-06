@@ -46,7 +46,7 @@ $wgResourceModules['ext.categoryskins.special'] = [
 	'scripts' => ['js/categoryskins.js'],
 	'localBasePath' => __DIR__.'/',
 	'remoteExtPath' => 'CategorySkins',
-	'dependencies' => ['ext.hydraCore.font-awesome'],
+	'dependencies' => ['ext.hydraCore.font-awesome.styles'],
 	'position' => 'top',
 ];
 
