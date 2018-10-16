@@ -208,7 +208,7 @@ class SpecialCategorySkins extends SpecialPage {
 
 	/**
 	 * Request skin data and load it
-	 * 
+	 *
 	 * @return bool
 	 */
 	private function loadSkinForEdit() {
@@ -282,8 +282,8 @@ class SpecialCategorySkins extends SpecialPage {
 				$html .= Html::element('td', ['class' => 'table-center'], 'N/A');
 			}
 
-			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('pencil')));
-			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('trash')));
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('edit')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('pencil-alt')));
+			$html .= Html::rawElement('td', ['class' => 'table-center'], Html::rawElement('a', ['href'=>$this->getTitle('delete')->getLinkUrl().'?id='.$style->cs_id], HydraCore::awesomeIcon('trash-alt')));
 		}
 		$html .= '
 				</tbody>
