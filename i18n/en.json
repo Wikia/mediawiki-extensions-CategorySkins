@@ -23,5 +23,6 @@
 	"cs_error_load_skin_for_id": "Could not load skin for ID: $1",
 	"cs_error_logo_required": "Logo is required for a custom page link",
 	"cs_error_no_id": "No id specified",
-	"cs_confirm_skin_delete": "Confirm deletion of skin for Category:$1"
+	"cs_confirm_skin_delete": "Confirm deletion of skin for Category:$1",
+	"right-skincategories": "Create [[Special:CategorySkins|skins for categories]]"
 }
