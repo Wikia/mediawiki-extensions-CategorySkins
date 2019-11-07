@@ -124,7 +124,7 @@ class SpecialCategorySkins extends SpecialPage {
 		$this->checkPermissions();
 		$this->outputHeader();
 		$this->getOutput()->addModules('ext.categoryskins.special');
-		$db = wfGetDB(DB_SLAVE);
+		$db = wfGetDB(DB_MASTER);
 
 		if ($path) {
 			$this->getOutput()->addHtml('<p>'.Html::element('a', ['href'=>$this->getTitle()->getLinkUrl()], 'back to skin list'));
