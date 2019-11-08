@@ -1,0 +1,17 @@
+{
+	"name": "hydrawiki/categoryskins",
+	"type": "mediawiki-extension",
+    "license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=7.0.0"
+	},
+	"require-dev": {
+		"hydrawiki/hydrawiki-codesniffer": "^1.0.0"
+	},
+	"scripts": {
+		"test": [
+			"phpcs -p -s"
+		],
+		"fix": "phpcbf"
+	}
+}
