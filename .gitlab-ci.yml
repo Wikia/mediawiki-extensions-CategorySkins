@@ -1,0 +1,2 @@
+include: https://gitlab.com/hydrawiki/infrastructure/ci-templates/raw/master/mediawiki-extension.yml
+
