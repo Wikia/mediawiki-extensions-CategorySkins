@@ -1,0 +1,28 @@
+{
+	"@metadata": {
+		"authors": ["Baran6161_turk"]
+	},
+	"categoryskins": "Kategori Görünümleri",
+	"categoryskin": "Kategori Görünümü",
+	"categoryskins_description": "Kategori üyeliğine göre sayfalara özel kaplamalar uygula",
+	"action-skincategories": "kategorilere görünüm ata",
+	"cs_category_name": "Kategori Adı",
+	"cs_title_prefix": "Başlık Öneki",
+	"cs_title_suffix": "Başlık Soneki",
+	"cs_logo": "Simge",
+	"cs_logo_link": "Simge Bağlantısı",
+	"cs_stylesheet": "Stil",
+	"cs_edit": "Düzenle",
+	"cs_delete": "Sil",
+	"cs_no_styles_exist": "Görünüm yok.",
+	"cs_error_category_required": "Kategori adı gerekli.",
+	"cs_error_deleting_skin": "Görünüm silinirken hata oluştu",
+	"cs_error_failed_skin_save": "Kategori görünümü kaydedilemedi",
+	"cs_error_invalid_category": "Geçersiz Kategori adı.",
+	"cs_error_invalid_logo_page": "Geçersiz sayfa",
+	"cs_error_load_skin_for_id": "Kimlik için kaplama yüklenemedi: $1",
+	"cs_error_logo_required": "Özel sayfa bağlantısı için simge gerekiyor",
+	"cs_error_no_id": "Kimlik belirtilmedi",
+	"cs_confirm_skin_delete": "Kategori:$1 için görünümün silinmesini onayla",
+	"right-skincategories": "[[Special:CategorySkins|Kategoriler için görünüm]] oluşturun"
+}
