@@ -26,10 +26,12 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Main executor
 	 *
-	 * @param  null|string $path
+	 * @param null|string $path
+	 *
+	 * @return void
 	 * @throws DBUnexpectedError
 	 */
-	public function execute($path = null) {
+	public function execute(?string $path = null) {
 		$this->setHeaders();
 		$this->checkPermissions();
 		$this->outputHeader();
@@ -97,12 +99,13 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Validate category from HTML Form.
 	 *
-	 * @param  string $category Category field from the HTML Form
-	 * @param  array  $allData  All the form data
-	 * @return bool|string	True or error message
+	 * @param string $category Category field from the HTML Form
+	 * @param array  $allData  All the form data
+	 *
+	 * @return boolean|string	True or error message
 	 * @throws MWException
 	 */
-	public static function validateCategory($category, $allData) {
+	public static function validateCategory(string $category, array $allData) {
 		// Let's check to see if they passed a category or if it is valid
 		if (!$category) {
 			return wfMessage('cs_error_category_required')->text();
@@ -116,12 +119,13 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Validate logo page link from HTML Form.
 	 *
-	 * @param  string $logoLink Logo link from the HTML Form
-	 * @param  array  $allData  All the form data
-	 * @return bool|string	True or error message
+	 * @param string $logoLink Logo link from the HTML Form
+	 * @param array  $allData  All the form data
+	 *
+	 * @return boolean|string True or error message
 	 * @throws MWException
 	 */
-	public static function validateLogoLink($logoLink, $allData) {
+	public static function validateLogoLink(string $logoLink, array $allData) {
 		// Let's check to see if they passed a page is valid
 		if (!$allData['cs_logo'] && $logoLink) {
 			return wfMessage('cs_error_logo_required')->text();
@@ -139,13 +143,13 @@ class SpecialCategorySkins extends SpecialPage {
 	 */
 	private function getFormFields() {
 		return [
-				'cs_id' => [
+			'cs_id' => [
 				'class' => 'HTMLDynamicHiddenField',
 				'default' => 0
 			],
 			'cs_category' => [
 				'type' => 'text',
-				'label' =>  wfMessage('cs_category_name'),
+				'label' => wfMessage('cs_category_name'),
 				'validation-callback'	=> ['SpecialCategorySkins', 'validateCategory'],
 			],
 			'cs_prefix' => [
@@ -181,10 +185,11 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Save skin details
 	 *
-	 * @param  $data
-	 * @return bool|string
+	 * @param array $data
+	 *
+	 * @return boolean|string
 	 */
-	public function saveStyle($data) {
+	public function saveStyle(array $data) {
 		$db = wfGetDB(DB_MASTER);
 		$title = Title::newFromText($data['cs_category']);
 		$data['cs_category'] = $title->getPrefixedDBkey();
@@ -206,7 +211,7 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Request skin data and load it
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function loadSkinForEdit() {
 		$id = $this->getRequest()->getVal('id');
@@ -229,8 +234,8 @@ class SpecialCategorySkins extends SpecialPage {
 	/**
 	 * Generate a style table for database results.
 	 *
-	 * @access private
-	 * @param  mixed	Database Result object or false for no results.
+	 * @param mixed	$styles Database Result object or false for no results.
+	 *
 	 * @return string
 	 */
 	private function styleTable($styles) {

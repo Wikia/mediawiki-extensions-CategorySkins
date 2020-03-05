@@ -71,7 +71,6 @@ class CategorySkin {
 	/**
 	 * Injects styles into the Resource Loader
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public static function injectModules() {
@@ -134,8 +133,9 @@ class CategorySkin {
 	/**
 	 * Enforce module name constraints (No pipes, commas, or exclamation marks, and under 255 chars)
 	 *
-	 * @param  string $name Module name
-	 * @return string	Cleaned up module name
+	 * @param string $name Module name
+	 *
+	 * @return string Cleaned up module name
 	 */
 	public static function categoryToModuleName($name) {
 		return substr(str_replace(['|', ',', '!'], '', $name), 0, 200);
@@ -144,8 +144,9 @@ class CategorySkin {
 	/**
 	 * Enforce body class name (No space, convert camel case to hyphens, and remove extra hyphens)
 	 *
-	 * @param  string	Category name
-	 * @return string	Cleaned up body class name
+	 * @param string $name Category name
+	 *
+	 * @return string Cleaned up body class name
 	 */
 	public static function categoryToBodyClassName($name) {
 		// Convert spaces to hyphens.
@@ -160,7 +161,8 @@ class CategorySkin {
 	/**
 	 * Recursive lookup through nested categories to find one for which we have a style
 	 *
-	 * @param  Title
+	 * @param Title $title
+	 *
 	 * @return CategorySkin or false
 	 */
 	public static function newFromTitle(Title $title) {
@@ -218,6 +220,8 @@ class CategorySkin {
 	 * Clears the cached category skin for the given Title
 	 *
 	 * @param Title $title
+	 *
+	 * @return void
 	 */
 	public static function clearCacheForTitle(Title $title) {
 		$cache = wfGetCache(CACHE_ANYTHING);
@@ -228,9 +232,9 @@ class CategorySkin {
 	/**
 	 * Apply a skin to page's given category
 	 *
-	 * @access public
-	 * @param  Title      $title
-	 * @param  OutputPage $output
+	 * @param Title      $title
+	 * @param OutputPage $output
+	 *
 	 * @return void
 	 */
 	public function apply(Title &$title, OutputPage $output) {
@@ -252,10 +256,11 @@ class CategorySkin {
 	/**
 	 * Apply a custom title from a given category
 	 *
-	 * @param  $template
-	 * @return bool | void
+	 * @param QuickTemplate $template
+	 *
+	 * @return boolean|void
 	 */
-	public function applyTitleChange($template) {
+	public function applyTitleChange(QuickTemplate $template) {
 		if (!isset($template->data) || !isset($template->data['headelement'])) {
 			return true;
 		}
@@ -269,20 +274,22 @@ class CategorySkin {
 	/**
 	 * Apply custom class to the body tag.
 	 *
-	 * @param  array $bodyAttributes
+	 * @param array $bodyAttributes
+	 *
 	 * @return void
 	 */
-	public function applyBodyChange(&$bodyAttributes) {
+	public function applyBodyChange(array &$bodyAttributes) {
 		$bodyAttributes['class'] .= ' ' . self::categoryToBodyClassName($this->category);
 	}
 
 	/**
 	 * Adjust mainpage URL to be the custom category skins one.
 	 *
-	 * @param  array $navUrls
+	 * @param array $navUrls
+	 *
 	 * @return mixed|void
 	 */
-	public function applyLogoLinkChange(&$navUrls) {
+	public function applyLogoLinkChange(array &$navUrls) {
 		if (!$this->logoLink) {
 			return;
 		}

@@ -29,11 +29,11 @@ class CategorySkinsHooks {
 	/**
 	 * Set the current page title object only once.
 	 *
-	 * @access public
-	 * @param  object	Title
+	 * @param Title $title
+	 *
 	 * @return void
 	 */
-	private static function initSkin($title) {
+	private static function initSkin(Title $title) {
 		if ($title === null) {
 			return false;
 		}
@@ -47,9 +47,15 @@ class CategorySkinsHooks {
 	/**
 	 * Check to see if a skin needs to be applied to the page.
 	 *
+	 * @param Title   $title
+	 * @param Article $article
+	 * @param object  $output
+	 * @param User    $user
+	 * @param object  $request
+	 * @param object  $mediaWiki
+	 *
 	 * @see    http://www.mediawiki.org/wiki/Manual:Hooks/BeforeInitialize
-	 * @access public
-	 * @return bool	true
+	 * @return boolean
 	 */
 	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
 		$skin = self::initSkin($title);
@@ -62,11 +68,13 @@ class CategorySkinsHooks {
 	/**
 	 * Check to see if a title needed to be overriden for the page.
 	 *
+	 * @param SkinTemplate  $skin
+	 * @param QuickTemplate $template
+	 *
 	 * @see    http://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateOutputPageBeforeExec
-	 * @access public
-	 * @return bool
+	 * @return boolean
 	 */
-	public static function onSkinTemplateOutputPageBeforeExec(&$skin, &$template) {
+	public static function onSkinTemplateOutputPageBeforeExec(SkinTemplate &$skin, QuickTemplate &$template) {
 		$cs_skin = self::initSkin($skin->getTitle());
 		if ($cs_skin) {
 			$cs_skin->applyTitleChange($template);
@@ -77,11 +85,14 @@ class CategorySkinsHooks {
 	/**
 	 * Check to see if a body class needs to be on a page.
 	 *
+	 * @param OutputPage $out
+	 * @param Skin       $sk
+	 * @param array      $bodyAttrs
+	 *
 	 * @see    http://www.mediawiki.org/wiki/Manual:Hooks/OutputPageBodyAttributes
-	 * @access public
-	 * @return bool
+	 * @return boolean
 	 */
-	public static function onOutputPageBodyAttributes($out, $sk, &$bodyAttrs) {
+	public static function onOutputPageBodyAttributes(OutputPage $out, Skin $sk, array &$bodyAttrs) {
 		$cs_skin = self::initSkin($sk->getTitle());
 		if ($cs_skin !== false) {
 			$cs_skin->applyBodyChange($bodyAttrs);
@@ -92,11 +103,15 @@ class CategorySkinsHooks {
 	/**
 	 * Check to see if the logo needs to have a url replacement done.
 	 *
+	 * @param SkinTemplate $skin
+	 * @param array        $nav_urls
+	 * @param integer      $revid
+	 * @param integer      $revidDuplicate
+	 *
 	 * @see    https://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateBuildNavUrlsNav_urlsAfterPermalink
-	 * @access public
-	 * @return bool
+	 * @return boolean
 	 */
-	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink(&$skin, &$nav_urls, &$revid, &$revidDuplicate) {
+	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink(SkinTemplate &$skin, array &$nav_urls, int &$revid, int &$revidDuplicate) {
 		$cs_skin = self::initSkin($skin->getTitle());
 		if ($cs_skin !== false) {
 			$cs_skin->applyLogoLinkChange($nav_urls);
@@ -107,17 +122,32 @@ class CategorySkinsHooks {
 	/**
 	 * Setups and Modifies Database Information
 	 *
+	 * @param DatabaseUpdater $updater Database update object
+	 *
 	 * @see    http://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
-	 * @access public
-	 * @param  DatabaseUpdater $updater Database update object
 	 * @return boolean	true
 	 */
 	public static function onLoadExtensionSchemaUpdates(DatabaseUpdater $updater) {
 		$extDir = __DIR__;
-		$updater->addExtensionUpdate(['addTable', 'category_skins', "{$extDir}/install/sql/create_table_category_skins.sql", true]);
+		$updater->addExtensionUpdate(
+			[
+				'addTable',
+				'category_skins',
+				"{$extDir}/install/sql/create_table_category_skins.sql",
+				true
+			]
+		);
 
 		// 2015-06-16
-		$updater->addExtensionUpdate(['addField', 'category_skins', 'cs_logo_link', "{$extDir}/upgrade/sql/categoryskins_upgrade_add_cs_logo_link.sql", true]);
+		$updater->addExtensionUpdate(
+			[
+				'addField',
+				'category_skins',
+				'cs_logo_link',
+				"{$extDir}/upgrade/sql/categoryskins_upgrade_add_cs_logo_link.sql",
+				true
+			]
+		);
 
 		return true;
 	}
@@ -125,7 +155,8 @@ class CategorySkinsHooks {
 	/**
 	 * Clear cached categories on page save
 	 *
-	 * @param  WikiPage $article the page that was just saved
+	 * @param WikiPage $article The page that was just saved.
+	 *
 	 * @return true
 	 */
 	public static function onPageContentSaveComplete($article) {
