@@ -24,97 +24,6 @@ class SpecialCategorySkins extends SpecialPage {
 	}
 
 	/**
-	 * Get group name
-	 *
-	 * @return string
-	 */
-	protected function getGroupName() {
-		return 'pages';
-	}
-
-	/**
-	 * Validate category from HTML Form.
-	 *
-	 * @param  string $category Category field from the HTML Form
-	 * @param  array  $allData  All the form data
-	 * @return bool|string	True or error message
-	 * @throws MWException
-	 */
-	public static function validateCategory($category, $allData) {
-		// Let's check to see if they passed a category or if it is valid
-		if (!$category) {
-			return wfMessage('cs_error_category_required')->text();
-		} elseif (!Title::newFromText($category)) {
-			return wfMessage('cs_error_invalid_category')->text();
-		}
-
-		return true;
-	}
-
-	/**
-	 * Validate logo page link from HTML Form.
-	 *
-	 * @param  string $logoLink Logo link from the HTML Form
-	 * @param  array  $allData  All the form data
-	 * @return bool|string	True or error message
-	 * @throws MWException
-	 */
-	public static function validateLogoLink($logoLink, $allData) {
-		// Let's check to see if they passed a page is valid
-		if (!$allData['cs_logo'] && $logoLink) {
-			return wfMessage('cs_error_logo_required')->text();
-		} elseif (!Title::newFromText($logoLink) && $allData['cs_logo']) {
-			return wfMessage('cs_error_invalid_logo_page')->text();
-		}
-
-		return true;
-	}
-
-	/**
-	 * Form fields
-	 *
-	 * @var array
-	 */
-	static $form = [
-		'cs_id' => [
-			'class' => 'HTMLDynamicHiddenField',
-			'default' => 0
-		],
-		'cs_category' => [
-			'type' => 'text',
-			'label' => 'Category',
-			'validation-callback'	=> ['SpecialCategorySkins', 'validateCategory'],
-		],
-		'cs_prefix' => [
-			'type' => 'text',
-			'cssclass' => 'cs_prefix',
-			'label' => 'Title prefix'
-		],
-		'cs_suffix' => [
-			'type' => 'text',
-			'cssclass' => 'cs_suffix',
-			'label' => 'Title suffix',
-			'help' => 'Title preview: <span class="cs_page_example">Example Page Title</span>'
-		],
-		'cs_logo' => [
-			'type' => 'text',
-			'label' => 'Replace logo',
-			'help' => 'Give the name of an uploaded file to replace the wiki logo for the pages in this category'
-		],
-		'cs_logo_link' => [
-			'type'	=> 'text',
-			'label'	=> 'Logo Link',
-			'help'	=> 'Insert the page where the logo will to link to when a user clicks on it.',
-			'validation-callback'	=> ['SpecialCategorySkins', 'validateLogoLink'],
-		],
-		'cs_style' => [
-			'type' => 'check',
-			'label' => 'Apply CSS page',
-			'help' => 'Will apply MediaWiki:CategoryName.css to style pages in the category'
-		],
-	];
-
-	/**
 	 * Main executor
 	 *
 	 * @param  null|string $path
@@ -138,9 +47,12 @@ class SpecialCategorySkins extends SpecialPage {
 					return;
 				}
 				// hard-code the field names to remove the 'wp' prefix (ugh!)
-				foreach (self::$form as $k => &$v) $v['name'] = $k;
+				$formFields = $this->getFormFields();
+				foreach ($formFields as $k => &$v) {
+					$v['name'] = $k;
+				}
 				// create the form
-				$form = new HTMLForm(self::$form, $this->getContext(), 'categoryskin');
+				$form = new HTMLForm($formFields, $this->getContext(), 'categoryskin');
 				$form->setId('categoryskin')->setSubmitText('Save')->setWrapperLegendMsg('categoryskin');
 				$form->setSubmitCallback([$this, 'saveStyle']);
 				// check for submission, returns true if validation passes
@@ -183,6 +95,90 @@ class SpecialCategorySkins extends SpecialPage {
 	}
 
 	/**
+	 * Validate category from HTML Form.
+	 *
+	 * @param  string $category Category field from the HTML Form
+	 * @param  array  $allData  All the form data
+	 * @return bool|string	True or error message
+	 * @throws MWException
+	 */
+	public static function validateCategory($category, $allData) {
+		// Let's check to see if they passed a category or if it is valid
+		if (!$category) {
+			return wfMessage('cs_error_category_required')->text();
+		} elseif (!Title::newFromText($category)) {
+			return wfMessage('cs_error_invalid_category')->text();
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate logo page link from HTML Form.
+	 *
+	 * @param  string $logoLink Logo link from the HTML Form
+	 * @param  array  $allData  All the form data
+	 * @return bool|string	True or error message
+	 * @throws MWException
+	 */
+	public static function validateLogoLink($logoLink, $allData) {
+		// Let's check to see if they passed a page is valid
+		if (!$allData['cs_logo'] && $logoLink) {
+			return wfMessage('cs_error_logo_required')->text();
+		} elseif (!Title::newFromText($logoLink) && $allData['cs_logo']) {
+			return wfMessage('cs_error_invalid_logo_page')->text();
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the form fields for the edit page.
+	 *
+	 * @return array
+	 */
+	private function getFormFields() {
+		return [
+				'cs_id' => [
+				'class' => 'HTMLDynamicHiddenField',
+				'default' => 0
+			],
+			'cs_category' => [
+				'type' => 'text',
+				'label' =>  wfMessage('cs_category_name'),
+				'validation-callback'	=> ['SpecialCategorySkins', 'validateCategory'],
+			],
+			'cs_prefix' => [
+				'type' => 'text',
+				'cssclass' => 'cs_prefix',
+				'label' => wfMessage('cs_prefix')
+			],
+			'cs_suffix' => [
+				'type' => 'text',
+				'cssclass' => 'cs_suffix',
+				'label' => wfMessage('cs_suffix'),
+				'help' => wfMessage('cs_suffix_help')
+			],
+			'cs_logo' => [
+				'type' => 'text',
+				'label' => wfMessage('cs_logo'),
+				'help' => wfMessage('cs_logo_help')
+			],
+			'cs_logo_link' => [
+				'type'	=> 'text',
+				'label' => wfMessage('cs_logo_link'),
+				'help' => wfMessage('cs_logo_link_help'),
+				'validation-callback'	=> ['SpecialCategorySkins', 'validateLogoLink'],
+			],
+			'cs_style' => [
+				'type' => 'check',
+				'label' => wfMessage('cs_style'),
+				'help' => wfMessage('cs_style_help')
+			]
+		];
+	}
+
+	/**
 	 * Save skin details
 	 *
 	 * @param  $data
@@ -217,7 +213,7 @@ class SpecialCategorySkins extends SpecialPage {
 		$db = wfGetDB(DB_REPLICA);
 		$row = $db->selectRow('category_skins', ['*'], ['cs_id' => $id], __METHOD__);
 		if ($row) {
-			foreach (array_keys(self::$form) as $k) {
+			foreach (array_keys($this->getFormFields()) as $k) {
 				if ($k == 'cs_category') {
 					$row->$k = Title::newFromText($row->$k);
 				} elseif ($k == 'cs_logo') {
@@ -291,5 +287,14 @@ class SpecialCategorySkins extends SpecialPage {
 			</table>';
 
 		return $html;
+	}
+
+	/**
+	 * Get group name
+	 *
+	 * @return string
+	 */
+	protected function getGroupName() {
+		return 'pages';
 	}
 }
