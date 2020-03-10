@@ -15,10 +15,11 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	/**
 	 * Gets list of pages used by this module
 	 *
-	 * @param  $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
+	 *
 	 * @return Array: List of pages
 	 */
-	protected function getPages(\ResourceLoaderContext $context) {
+	protected function getPages(ResourceLoaderContext $context) {
 		// Drop first 23 characters. (ext.categoryskins.skin.)
 		return [
 			'MediaWiki:' . substr($this->name, 23) . '.css' => [
@@ -30,7 +31,7 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	/**
 	 * Gets group name
 	 *
-	 * @return string	Name of group
+	 * @return string Name of group
 	 */
 	public function getGroup() {
 		return 'site';
@@ -39,7 +40,7 @@ class CategorySkinModule extends ResourceLoaderWikiModule {
 	/**
 	 * Get position
 	 *
-	 * @return string	Position for the css
+	 * @return string Position for the CSS
 	 */
 	public function getPosition() {
 		return 'top';
