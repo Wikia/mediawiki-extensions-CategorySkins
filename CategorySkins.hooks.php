@@ -105,13 +105,13 @@ class CategorySkinsHooks {
 	 *
 	 * @param SkinTemplate $skin
 	 * @param array        $nav_urls
-	 * @param integer      $revid
-	 * @param integer      $revidDuplicate
+	 * @param integer|null $revid
+	 * @param integer|null $revidDuplicate
 	 *
 	 * @see    https://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateBuildNavUrlsNav_urlsAfterPermalink
 	 * @return boolean
 	 */
-	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink(SkinTemplate &$skin, array &$nav_urls, int &$revid, int &$revidDuplicate) {
+	public static function onSkinTemplateBuildNavUrlsNav_urlsAfterPermalink(SkinTemplate &$skin, array &$nav_urls, ?int &$revid, ?int &$revidDuplicate) {
 		$cs_skin = self::initSkin($skin->getTitle());
 		if ($cs_skin !== false) {
 			$cs_skin->applyLogoLinkChange($nav_urls);
