@@ -31,7 +31,7 @@ class SpecialCategorySkins extends SpecialPage {
 	 * @return void
 	 * @throws DBUnexpectedError
 	 */
-	public function execute(?string $path = null) {
+	public function execute($path) {
 		$this->setHeaders();
 		$this->checkPermissions();
 		$this->outputHeader();
